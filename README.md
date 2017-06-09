@@ -1,2 +1,2 @@
-# core-bundle
-Core for TechPromux Bundles
+# base-bundle
+Base for TechPromux Bundles
