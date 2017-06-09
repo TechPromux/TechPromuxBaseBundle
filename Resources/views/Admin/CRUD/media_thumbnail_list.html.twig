@@ -1,0 +1,20 @@
+<td class="sonata-ba-list-field sonata-ba-list-field-{{ field_description.type }}" objectId="{{ admin.id(object) }}"{% if field_description.options.row_align is defined %} style="text-align:{{ field_description.options.row_align }}"{% endif %}>
+    {% set route = field_description.options.route.name|default(null) %}
+    {% set action = route == 'show' ? 'VIEW' : route|upper %}
+
+        {% if
+            field_description.options.identifier is defined
+            and route
+            and action
+            and admin.hasRoute(route)
+            and admin.isGranted(action, action in ['VIEW', 'EDIT'] ? object : null)
+        %}
+        <a class="sonata-link-identifier" href="{{ admin.generateObjectUrl(route, object, field_description.options.route.parameters) }}">
+            {% thumbnail value, 'admin' with {'width': (field_description.options['width'] is defined)?field_description.options['width']:'75','height': (field_description.options['height'] is defined)?field_description.options['height']:'75','class': (field_description.options['class'] is defined)?field_description.options['class']:'img-polaroid'} %}
+            {#{% media value, 'small' with {'class': 'myclass'} %}#}
+            {#{% path value,  'large' %}#}
+        </a>
+        {% else %}
+            {% thumbnail value, 'admin' with {'width': (field_description.options['width'] is defined)?field_description.options['width']:'75','height': (field_description.options['height'] is defined)?field_description.options['height']:'75','class': (field_description.options['class'] is defined)?field_description.options['class']:'img-polaroid'} %}
+        {% endif %}   
+</td>

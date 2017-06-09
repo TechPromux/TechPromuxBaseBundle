@@ -1,0 +1,44 @@
+{% extends "SonataAdminBundle:CRUD:edit.html.twig" %}
+
+{% block stylesheets %}
+    {{parent()}}
+{% endblock stylesheets %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script>
+
+        $(document).ready(function () {
+
+            //$('textarea.wysihtml5').wysihtml5({"color": true} );
+
+            //$('ul.wysihtml5-toolbar li a[data-wysihtml5-command="insertImage"],ul.wysihtml5-toolbar li a[data-wysihtml5-command="createLink"]').parent().hide();
+
+            $('input[type="time"], input.time').datetimepicker({
+                pickDate: false,
+                useSeconds: false,
+                format: 'HH:mm'
+            });
+
+            $('input[type="date"], input.date').datetimepicker({
+                pickTime: false,
+                showTime: false,
+                format: 'DD/MM/YYYY'
+            });
+
+            $('input[type="datetime"], input.datetime').datetimepicker({
+                useSeconds: false,
+                format: 'DD/MM/YYYY HH:mm'
+            });
+
+            /*
+             $('select.select2').select2();
+
+             $('input.icheck[type="checkbox"],input.icheck[type="radio"]').iCheck({
+             checkboxClass: 'icheckbox_square-blue',
+             radioClass: 'iradio_square-blue'
+             });
+             */
+        });
+    </script>
+{% endblock javascripts %}

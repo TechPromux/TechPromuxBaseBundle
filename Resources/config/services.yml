@@ -1,0 +1,4 @@
+services:
+#    tech_promux_core.example:
+#        class: TechPromux\Bundle\BaseBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]

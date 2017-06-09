@@ -1,0 +1,11 @@
+{#{{ knp_menu_render(admin.sidemenu(action), {'currentClass' : 'active'}, 'list') }}#}
+{#<p></p>#}
+{#<div class="btn-group">#}
+    {#<a type="button" class="btn {% if mode == 'list' %}btn-info active{% else %}btn-default{% endif %}" href="{{ admin.generateUrl('list',{'filters':'reset'}) }}">#}
+        {#<i class="fa fa-list"></i> {{ 'classification.list_mode'|trans({}, 'SonataClassificationBundle') }}#}
+    {#</a>#}
+    {#<a type="button" class="btn {% if mode == 'tree' %}btn-info active{% else %}btn-default{% endif %}" href="{{ admin.generateUrl('tree') }}">#}
+        {#<i class="fa fa-sitemap"></i> {{ 'classification.tree_mode'|trans({}, 'SonataClassificationBundle') }}#}
+    {#</a>#}
+{#</div>#}
+{#<p></p>#}

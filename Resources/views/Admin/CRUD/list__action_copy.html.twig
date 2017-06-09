@@ -1,0 +1,5 @@
+{% if admin.hasRoute('copy') and admin.id(object) and admin.isGranted('EDIT', object)%}
+    <a class="btn btn-sm btn-default copy_link sonata-action-element" href="{{ admin.generateObjectUrl('copy', object) }}" onclick="return confirm('{{ 'link_action_copy_confirm'|trans({}, 'TechPromuxBaseBundle') }}');">
+        <i class="fa fa-copy" data-placement="top" data-toggle="tooltip" title="{{ 'link_action_copy'|trans({}, 'TechPromuxBaseBundle') }}"></i>
+    </a>
+{% endif %}
