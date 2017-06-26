@@ -3,7 +3,7 @@
 namespace TechPromux\Bundle\BaseBundle\Manager\Resource;
 
 use TechPromux\Bundle\BaseBundle\Entity\BaseResource;
-use TechPromux\Bundle\BaseBundle\Entity\Resource\HasBaseResourceOwner;
+use TechPromux\Bundle\BaseBundle\Entity\Resource\Owner\HasResourceOwner;
 use TechPromux\Bundle\BaseBundle\Manager\BaseManager;
 use TechPromux\Bundle\BaseBundle\Manager\Owner\BaseResourceOwnerManager;
 
@@ -155,7 +155,7 @@ abstract class BaseResourceManager extends BaseManager
 
     protected function getManagedResourceHasOwnerProperty()
     {
-        if (in_array(HasBaseResourceOwner::class, class_implements($this->getResourceClass())))
+        if (in_array(HasResourceOwner::class, class_implements($this->getResourceClass())))
             return true;
         return false;
     }
@@ -369,13 +369,13 @@ abstract class BaseResourceManager extends BaseManager
      */
     public function persist($object, $flushed = true)
     {
-        $this->prePersist($object, $flushed);
+        $this->prePersist($object);
         $em = $this->getDoctrineEntityManager();
         $em->persist($object);
         if ($flushed) {
             $em->flush($object);
         }
-        $this->postPersist($object, $flushed);
+        $this->postPersist($object);
         return $object;
     }
 
@@ -400,10 +400,9 @@ abstract class BaseResourceManager extends BaseManager
      * Acciones antes de salvar el elemento
      *
      * @param \TechPromux\Bundle\BaseBundle\Entity\Resource\BaseResource $object
-     * @param boolean $flushed
      * @return \TechPromux\Bundle\BaseBundle\Entity\Resource\BaseResource
      */
-    public function prePersist($object, $flushed = true)
+    public function prePersist($object)
     {
         if ($this->getManagedResourceHasOwnerProperty()) {
             $owner = $this->getResourceOwnerManager()->findOwnerOfAuthenticatedUser();
@@ -422,10 +421,9 @@ abstract class BaseResourceManager extends BaseManager
      * Acciones después de salvar el elemento
      *
      * @param \TechPromux\Bundle\BaseBundle\Entity\Resource\BaseResource $object
-     * @param boolean $flushed
      * @return \TechPromux\Bundle\BaseBundle\Entity\Resource\BaseResource
      */
-    public function postPersist($object, $flushed = true)
+    public function postPersist($object)
     {
         return $object;
     }
@@ -470,10 +468,9 @@ abstract class BaseResourceManager extends BaseManager
      * Acciones antes de actualizar el elemento
      *
      * @param \TechPromux\Bundle\BaseBundle\Entity\Resource\BaseResource $object
-     * @param boolean $flushed
      * @return \TechPromux\Bundle\BaseBundle\Entity\Resource\BaseResource
      */
-    public function preUpdate($object, $flushed = true)
+    public function preUpdate($object)
     {
         $object->setUpdatedAt(new \Datetime());
         return $object;
@@ -483,10 +480,9 @@ abstract class BaseResourceManager extends BaseManager
      * Acciones después de salvar el elemento
      *
      * @param \TechPromux\Bundle\BaseBundle\Entity\Resource\BaseResource $object
-     * @param boolean $flushed
      * @return \TechPromux\Bundle\BaseBundle\Entity\Resource\BaseResource
      */
-    public function postUpdate($object, $flushed = true)
+    public function postUpdate($object)
     {
         return $object;
     }
@@ -531,10 +527,9 @@ abstract class BaseResourceManager extends BaseManager
      * Acciones antes de eliminar el elemento
      *
      * @param \TechPromux\Bundle\BaseBundle\Entity\Resource\BaseResource $object
-     * @param boolean $flushed
      * @return \TechPromux\Bundle\BaseBundle\Entity\Resource\BaseResource
      */
-    public function preRemove($object, $flushed = true)
+    public function preRemove($object)
     {
         return $object;
     }
@@ -543,10 +538,9 @@ abstract class BaseResourceManager extends BaseManager
      * Acciones después de eliminar el elemento
      *
      * @param \TechPromux\Bundle\BaseBundle\Entity\Resource\BaseResource $object
-     * @param boolean $flushed
      * @return \TechPromux\Bundle\BaseBundle\Entity\Resource\BaseResource
      */
-    public function postRemove($object, $flushed = true)
+    public function postRemove($object)
     {
         return $object;
     }

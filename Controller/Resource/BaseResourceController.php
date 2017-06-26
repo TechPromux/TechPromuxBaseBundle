@@ -44,9 +44,9 @@ abstract class BaseResourceController extends FOSRestController
      * @return BaseResourceFormType
      */
     public function getResourceFormType($action = "POST", $resource = array(), $options = array())
-    {
-        $this->getResourceManager()->throwException('Not implemented');
-    }
+{
+    $this->getResourceManager()->throwException('Not implemented');
+}
 
     /**
      * Crea, procesa y valida el formulario de una action indicada
@@ -61,7 +61,14 @@ abstract class BaseResourceController extends FOSRestController
     {
         $formType = $this->getResourceFormType($action, $resource, $options);
 
-        $form = $this->createForm($formType, $resource);
+        //@deprecated
+        //$form = $this->createForm($formType, $resource);
+
+        $formBuilder = $this->createFormBuilder($resource, $options);
+
+        $formType->configureFormBuilder($formBuilder, $options);
+
+        $form = $formBuilder->getForm();
 
         /*
 	    $format = $request->getRequestFormat() ?: $request->get('_format', 'json');

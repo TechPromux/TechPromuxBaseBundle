@@ -379,10 +379,10 @@ abstract class BaseResourceTreeManager extends BaseResourceManager
      *
      * @param \TechPromux\Bundle\BaseBundle\Entity\BaseResourceTree $object
      */
-    public function prePersist($object, $flushed = true)
+    public function prePersist($object)
     {
 
-        parent::prePersist($object, $flushed = true);
+        parent::prePersist($object);
 
         if (is_null($object->getParent())) {
             //root = $this->findBaseRootElementOrNull();
@@ -410,10 +410,10 @@ abstract class BaseResourceTreeManager extends BaseResourceManager
      *
      * @param \TechPromux\Bundle\BaseBundle\Entity\BaseResourceTree $object
      */
-    public function postPersist($object, $flushed = true)
+    public function postPersist($object)
     {
 
-        parent::postPersist($object, $flushed);
+        parent::postPersist($object);
 
         $this->updatePositionForSiblingsElements($object);
 
@@ -425,9 +425,9 @@ abstract class BaseResourceTreeManager extends BaseResourceManager
      *
      * @param \TechPromux\Bundle\BaseBundle\Entity\BaseResourceTree $object
      */
-    public function preUpdate($object, $flushed = true)
+    public function preUpdate($object)
     {
-        parent::preUpdate($object, $flushed);
+        parent::preUpdate($object);
         if (is_null($object->getParent())) {
             $root = $this->findBaseRootElementOrNull();
             /* @var $root \TechPromux\Bundle\BaseBundle\Entity\BaseResourceTree */
@@ -452,10 +452,10 @@ abstract class BaseResourceTreeManager extends BaseResourceManager
      *
      * @param \TechPromux\Bundle\BaseBundle\Entity\BaseResourceTree $object
      */
-    public function postUpdate($object, $flushed = true)
+    public function postUpdate($object)
     {
 
-        parent::postUpdate($object, $flushed);
+        parent::postUpdate($object);
 
         $this->updatePositionForSiblingsElements($object);
 
@@ -469,9 +469,9 @@ abstract class BaseResourceTreeManager extends BaseResourceManager
      *
      * @param \TechPromux\Bundle\BaseBundle\Entity\BaseResourceTree $object
      */
-    public function preRemove($object, $flushed = true)
+    public function preRemove($object)
     {
-        parent::preRemove($object, $flushed);
+        parent::preRemove($object);
         $this->removeElementAndChildren($object);
         $this->updatePositionForSiblingsElements($object, true);
     }
@@ -511,9 +511,9 @@ abstract class BaseResourceTreeManager extends BaseResourceManager
      *
      * @param \TechPromux\Bundle\BaseBundle\Entity\BaseResourceTree $object
      */
-    public function postRemove($object, $flushed = true)
+    public function postRemove($object)
     {
-        parent::postRemove($object, $flushed);
+        parent::postRemove($object);
         $this->updateLftRgtForAllElements();
     }
 
