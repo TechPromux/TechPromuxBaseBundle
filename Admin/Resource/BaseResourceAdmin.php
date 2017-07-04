@@ -13,12 +13,20 @@ use TechPromux\Bundle\BaseBundle\Manager\Resource\BaseResourceManager;
  */
 abstract class BaseResourceAdmin extends BaseAdmin
 {
+    /**
+     * @var BaseResourceManager
+     */
+    protected $_resource_manager;
 
     /**
-     *
-     * @return string
+     * @param BaseResourceManager $resource_manager
+     * @return BaseResourceAdmin
      */
-    abstract public function getResourceManagerID();
+    public function setResourceManager($resource_manager)
+    {
+        $this->_resource_manager = $resource_manager;
+        return $this;
+    }
 
     /**
      *
@@ -26,16 +34,7 @@ abstract class BaseResourceAdmin extends BaseAdmin
      */
     public function getResourceManager()
     {
-        return $this->getConfigurationPool()->getContainer()->get($this->getResourceManagerID());
-    }
-
-    /**
-     *
-     * @return string
-     */
-    public function getTranslationDomain()
-    {
-        return $this->getResourceManager()->getBundleName();
+        return $this->_resource_manager;
     }
 
     /**
