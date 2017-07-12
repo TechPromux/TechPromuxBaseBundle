@@ -1,6 +1,6 @@
 {
     "name": "techpromux/base-bundle",
-    "description": "Base codes for TechPromux bundles",
+    "description": "Base for TechPromux bundles",
     "require": {
         "php": "^5.3.3 || ^7.0",
         "symfony/symfony": "^3.2",
