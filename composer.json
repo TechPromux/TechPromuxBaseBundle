@@ -1,0 +1,10 @@
+{
+    "name": "techpromux/dynamic-query-bundle",
+    "description": "Build your own custom queries throught dynamic configuration pages",
+    "require": {
+        "php": "^5.3.3 || ^7.0",
+        "symfony/symfony": "^3.2",
+        "sonata-project/admin-bundle": "^3.1",
+		"sonata-project/doctrine-orm-admin-bundle": "^3.1",
+    }
+}
