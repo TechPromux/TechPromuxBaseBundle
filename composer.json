@@ -1,5 +1,5 @@
 {
-    "name": "techpromux/dynamic-query-bundle",
+    "name": "techpromux/base-bundle",
     "description": "Build your own custom queries throught dynamic configuration pages",
     "require": {
         "php": "^5.3.3 || ^7.0",
