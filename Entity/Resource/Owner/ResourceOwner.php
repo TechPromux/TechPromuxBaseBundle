@@ -3,7 +3,7 @@
 namespace TechPromux\Bundle\BaseBundle\Entity\Resource\Owner;
 
 /**
- * BaseOwner
+ * BaseUserResourceOwner
  *
  */
 interface ResourceOwner

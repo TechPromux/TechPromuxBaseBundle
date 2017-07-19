@@ -1,1 +1,5 @@
+doctrine:
+    orm:
+        resolve_target_entities:
+            TechPromux\Bundle\BaseBundle\Entity\Resource\Owner\ResourceOwner: TechPromux\Bundle\BaseBundle\Entity\DefaultUserResourceOwner
 

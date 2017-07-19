@@ -50,7 +50,7 @@ abstract class BaseManager
      *
      * @return \Symfony\Component\DependencyInjection\ContainerInterface
      */
-    protected function getServiceContainer()
+    public function getServiceContainer()
     {
         return $this->service_container;
     }
@@ -318,7 +318,7 @@ abstract class BaseManager
      *
      * @return string
      */
-    public function localeFromAuthenticatedUser()
+    public function getLocaleFromAuthenticatedUser()
     {
 
         $user = $this->findAuthenticatedUser();
@@ -332,7 +332,7 @@ abstract class BaseManager
      * @return string
      * @throws \Exception
      */
-    public function localeFromUserByUserId($userid)
+    public function getLocaleFromUserByUserId($userid)
     {
 
         $user = $this->findUserById($userid);
@@ -549,10 +549,11 @@ abstract class BaseManager
     }
 
     /**
-     * Crea un $formBuilder
+     * Creates a $formBuilder
      *
      * @param mixed $data
      * @param array $options
+     *
      * @return \Symfony\Component\Form\Extension\Core\Type\FormType
      */
     public function createFormBuilder($data = null, array $options = array())
@@ -567,6 +568,29 @@ abstract class BaseManager
         }
 
         return $this->service_container->get('form.factory')->createBuilder($type, $data, $options);
+    }
+
+    /**
+     * Creates a named $formBuilder
+     *
+     * @param string $name
+     * @param null $data
+     * @param array $options
+     *
+     * @return \Symfony\Component\Form\FormBuilderInterface
+     */
+    public function createNamedFormBuilder($name = 'form', $data = null, array $options = array())
+    {
+        if (method_exists('Symfony\Component\Form\AbstractType', 'getBlockPrefix')) {
+            $type = 'Symfony\Component\Form\Extension\Core\Type\FormType';
+        } else {
+            // not using the class name is deprecated since Symfony 2.8 and
+            // is only used for backwards compatibility with older versions
+            // of the Form component
+            $type = 'form';
+        }
+
+        return $this->service_container->get('form.factory')->createNamedBuilder($name, $type, $data, $options);
     }
 
 //--------------------------------------------------------------------------

@@ -2,3 +2,19 @@ services:
 #    tech_promux_core.example:
 #        class: TechPromux\Bundle\BaseBundle\Example
 #        arguments: ["@service_id", "plain_value", "%parameter%"]
+
+    # Manager Services
+
+    techpromux_base.manager.default_user_resource_owner:
+        class: TechPromux\Bundle\BaseBundle\Manager\Resource\Owner\DefaultUser\DefaultUserResourceOwnerManager
+        arguments: [~]
+        tags:
+            - { name: techpromux.entity_manager}
+        calls:
+            - [ setServiceContainer,['@service_container']]
+
+
+    # Owner Managers Services
+
+    techpromux_base.manager.default_resource_owner:
+        alias: techpromux_base.manager.default_user_resource_owner

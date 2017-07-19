@@ -1,0 +1,16 @@
+.bs-docs-sidenav {
+    margin: 0px 0 0;
+}
+#ajax-waiting-loader {
+    background: url("../img/ajax-loader-bg.png") repeat scroll 0 0 transparent;
+    height: 100%;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000000;
+}
+#left-menu-dashboard-list .dropdown-menu{
+    min-width: 350px;
+}
+.highslide-credits{display: none !important;}

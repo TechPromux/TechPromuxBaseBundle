@@ -88,7 +88,8 @@ abstract class BaseResource extends BaseEntity
      *
      * @return \DateTime
      */
-    public function getCreatedAt()
+    public
+    function getCreatedAt()
     {
         return $this->createdAt;
     }
@@ -100,7 +101,8 @@ abstract class BaseResource extends BaseEntity
      *
      * @return BaseResource
      */
-    public function setUpdatedAt($updatedAt)
+    public
+    function setUpdatedAt($updatedAt)
     {
         $this->updatedAt = $updatedAt;
 
@@ -112,7 +114,8 @@ abstract class BaseResource extends BaseEntity
      *
      * @return \DateTime
      */
-    public function getUpdatedAt()
+    public
+    function getUpdatedAt()
     {
         return $this->updatedAt;
     }
@@ -124,7 +127,8 @@ abstract class BaseResource extends BaseEntity
      *
      * @return BaseResource
      */
-    public function setEnabled($enabled)
+    public
+    function setEnabled($enabled)
     {
         $this->enabled = $enabled;
 
@@ -136,7 +140,8 @@ abstract class BaseResource extends BaseEntity
      *
      * @return bool
      */
-    public function getEnabled()
+    public
+    function getEnabled()
     {
         return $this->enabled;
     }
@@ -148,7 +153,8 @@ abstract class BaseResource extends BaseEntity
      *
      * @return BaseResource
      */
-    public function setName($name)
+    public
+    function setName($name)
     {
         $this->name = $name;
 
@@ -160,7 +166,8 @@ abstract class BaseResource extends BaseEntity
      *
      * @return string
      */
-    public function getName()
+    public
+    function getName()
     {
         return $this->name;
     }
@@ -172,7 +179,8 @@ abstract class BaseResource extends BaseEntity
      *
      * @return BaseResource
      */
-    public function setTitle($title)
+    public
+    function setTitle($title)
     {
         $this->title = $title;
 
@@ -184,7 +192,8 @@ abstract class BaseResource extends BaseEntity
      *
      * @return string
      */
-    public function getTitle()
+    public
+    function getTitle()
     {
         return $this->title;
     }
@@ -196,7 +205,8 @@ abstract class BaseResource extends BaseEntity
      *
      * @return BaseResource
      */
-    public function setDescription($description)
+    public
+    function setDescription($description)
     {
         $this->description = $description;
 
@@ -208,7 +218,8 @@ abstract class BaseResource extends BaseEntity
      *
      * @return string
      */
-    public function getDescription()
+    public
+    function getDescription()
     {
         return $this->description;
     }
@@ -220,7 +231,8 @@ abstract class BaseResource extends BaseEntity
      *
      * @return BaseResource
      */
-    public function setOptions($options)
+    public
+    function setOptions($options)
     {
         $this->options = $options;
 
@@ -232,7 +244,8 @@ abstract class BaseResource extends BaseEntity
      *
      * @return array
      */
-    public function getOptions()
+    public
+    function getOptions()
     {
         return $this->options;
     }
@@ -244,7 +257,8 @@ abstract class BaseResource extends BaseEntity
      *
      * @return BaseResource
      */
-    public function setSecurityToken($securityToken)
+    public
+    function setSecurityToken($securityToken)
     {
         $this->securityToken = $securityToken;
 
@@ -256,17 +270,20 @@ abstract class BaseResource extends BaseEntity
      *
      * @return string
      */
-    public function getSecurityToken()
+    public
+    function getSecurityToken()
     {
         return $this->securityToken;
     }
 
-    //-------------------------------------------------------------
+//-------------------------------------------------------------
 
     /**
      * @ORM\PrePersist
      */
-    public function prePersist() {
+    public
+    function prePersist()
+    {
         $this->createdAt = new \DateTime();
         $this->updatedAt = new \DateTime();
         $this->enabled = is_null($this->enabled) ? true : $this->enabled;
@@ -275,7 +292,9 @@ abstract class BaseResource extends BaseEntity
     /**
      * @ORM\PreUpdate
      */
-    public function preUpdate() {
+    public
+    function preUpdate()
+    {
         $this->updatedAt = new \DateTime();
     }
 }

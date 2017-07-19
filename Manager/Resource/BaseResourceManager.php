@@ -16,7 +16,7 @@ abstract class BaseResourceManager extends BaseManager
 {
 
     /**
-     * Obtiene la clase de la entidad
+     * Get entity class name
      *
      * @return class
      */
@@ -33,7 +33,7 @@ abstract class BaseResourceManager extends BaseManager
     }
 
     /**
-     * Obtiene el nombre corto de la entidad
+     * Get entity short name
      *
      * @return string
      */
@@ -62,7 +62,7 @@ abstract class BaseResourceManager extends BaseManager
      */
     public function getDefaultResourceOwnerManagerID()
     {
-        return 'techpromux_default.manager.owner';
+        return 'techpromux_base.manager.default_resource_owner';
     }
     //--------------------------------------------------------------------------
 
@@ -280,7 +280,7 @@ abstract class BaseResourceManager extends BaseManager
      * @param array $orderBy
      * @return \Pagerfanta\Pagerfanta
      */
-    public function createPagerfantaPaginator($page = 1, $limit = 32, array $criteria = null, array $orderBy = null)
+    protected function createPagerfantaPaginator($page = 1, $limit = 32, array $criteria = null, array $orderBy = null)
     {
         $pager = new \Pagerfanta\Pagerfanta(new \Pagerfanta\Adapter\DoctrineORMAdapter($this->createQueryBuilder($criteria, $orderBy)));
         $pager->setCurrentPage($page);
