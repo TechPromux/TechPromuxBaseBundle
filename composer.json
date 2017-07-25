@@ -4,12 +4,12 @@
     "description": "Base Codes for TechPromux bundles",
     "keywords": ["base", "techpromux],
     "homepage": "https://github.com/TechPromux/TechPromuxBaseBundle",
-    "license": "MIT",
+    "license": "GPL",
     "authors": [
         {
             "name": "Franklin Rivero Duharte",
             "email": "frivero.duharte@gmail.com",
-            "homepage": "http://sonata-project.org"
+            "homepage": "https://github.com/frnklnrd"
         },
         {
             "name": "TechPromux",
@@ -25,12 +25,6 @@
         "symfony/form": "^2.8 || ^3.0",
         "symfony/http-foundation": "^2.8 || ^3.0",
         "symfony/security": "^2.8 || ^3.0"
-    },
-    "require-dev": {
-    },
-    "suggest": {
-    },
-    "conflict": {
     },
     "autoload": {
         "psr-4": { "TechPromux\\Bundle\BaseBundle\\": "" },
