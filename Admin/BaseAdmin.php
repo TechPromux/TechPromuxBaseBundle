@@ -15,13 +15,6 @@ use Sonata\CoreBundle\Validator\ErrorElement;
  */
 abstract class BaseAdmin extends AbstractAdmin
 {
-
-    //protected $translationDomain = 'TechPromuxCoreBundle';
-
-    //protected $formOptions = array(
-    //   'validation_groups' => array()
-    //);
-
     protected $datagridValues = array(
         '_sort_by' => 'name',
         '_sort_order' => 'ASC',
