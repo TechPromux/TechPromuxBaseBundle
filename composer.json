@@ -2,9 +2,9 @@
     "name": "techpromux/base-bundle",
     "type": "symfony-bundle",
     "description": "Base Codes for TechPromux bundles",
-    "keywords": ["base", "techpromux],
+    "keywords": ["base", "techpromux"],
     "homepage": "https://github.com/TechPromux/TechPromuxBaseBundle",
-    "license": "GPL",
+    "license": "GNU GPL v3",
     "authors": [
         {
             "name": "Franklin Rivero Duharte",
@@ -14,7 +14,7 @@
         {
             "name": "TechPromux",
             "email": "techpromux@gmail.com",
-            "homepage": "https://github.com/TechPromux/TechPromuxBaseBundle"
+            "homepage": "https://github.com/TechPromux"
         }
     ],
     "require": {
