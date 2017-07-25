@@ -4,7 +4,7 @@
     "description": "Base Codes for TechPromux bundles",
     "keywords": ["base", "techpromux"],
     "homepage": "https://github.com/TechPromux/TechPromuxBaseBundle",
-    "license": "GNU GPL v3",
+    "license": "GPL-3.0",
     "authors": [
         {
             "name": "Franklin Rivero Duharte",
