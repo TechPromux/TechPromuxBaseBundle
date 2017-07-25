@@ -56,7 +56,7 @@ abstract class BaseResourceAdmin extends BaseAdmin
     public function createQuery($context = 'list')
     {
         $query = parent::createQuery($context);
-        $queryModified = $this->getResourceManager()->alterBaseQuery($query, array(), $context);
+        $queryModified = $this->getResourceManager()->alterBaseQueryBuilder($query, array(), $context);
         return $queryModified ? $queryModified : $query;
     }
 

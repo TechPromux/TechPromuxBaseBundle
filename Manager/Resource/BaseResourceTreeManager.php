@@ -43,17 +43,17 @@ abstract class BaseResourceTreeManager extends BaseResourceManager
      * @param string $actions
      * @return \Doctrine\ORM\QueryBuilder
      */
-    public function alterBaseQuery($query, $options = array(), $action = 'list')
+    public function alterBaseQueryBuilder($query, $options = array(), $action = 'list')
     {
 
-        $query = parent::alterBaseQuery($query, $options, $action);
+        $query = parent::alterBaseQueryBuilder($query, $options, $action);
 
         $parent_tree = $this->findBaseRootElement();
 
         if (!is_null($parent_tree)) {
             $query->andWhere(
-                $query->getRootAliases()[0] . '.lft <= ' . $this->addParameter('rgt', $parent_tree->getRgt(), $query)
-                . ' AND ' . $query->getRootAliases()[0] . '.lft >= ' . $this->addParameter('lft', $parent_tree->getLft(), $query)
+                $query->getRootAliases()[0] . '.lft <= ' . $this->addNamedParameter('rgt', $parent_tree->getRgt(), $query)
+                . ' AND ' . $query->getRootAliases()[0] . '.lft >= ' . $this->addNamedParameter('lft', $parent_tree->getLft(), $query)
             );
         }
 
@@ -79,13 +79,13 @@ abstract class BaseResourceTreeManager extends BaseResourceManager
         $parent = $this->find($parent_id);
 
         $query->andWhere(
-            $query->getRootAliases()[0] . '.lft >=' . $this->addParameter('lft', $parent->getLft(), $query)
+            $query->getRootAliases()[0] . '.lft >=' . $this->addNamedParameter('lft', $parent->getLft(), $query)
             . ' AND ' .
-            $query->getRootAliases()[0] . '.lft <=' . $this->addParameter('rgt', $parent->getRgt(), $query)
+            $query->getRootAliases()[0] . '.lft <=' . $this->addNamedParameter('rgt', $parent->getRgt(), $query)
         );
         if (!$include_parent) {
             $query->andWhere(
-                $query->getRootAliases()[0] . '.id !=' . $this->addParameter('id', $parent_id, $query)
+                $query->getRootAliases()[0] . '.id !=' . $this->addNamedParameter('id', $parent_id, $query)
             );
         }
         return $query;
@@ -105,8 +105,8 @@ abstract class BaseResourceTreeManager extends BaseResourceManager
         }
         $parent = $this->find($parent_id);
         $query->andWhere(
-            $query->getRootAliases()[0] . '.lft > ' . $this->addParameter('rgt', $parent->getRgt(), $query)
-            . ' OR ' . $query->getRootAliases()[0] . '.lft < ' . $this->addParameter('lft', $parent->getLft(), $query)
+            $query->getRootAliases()[0] . '.lft > ' . $this->addNamedParameter('rgt', $parent->getRgt(), $query)
+            . ' OR ' . $query->getRootAliases()[0] . '.lft < ' . $this->addNamedParameter('lft', $parent->getLft(), $query)
         );
         return $query;
     }
@@ -174,7 +174,7 @@ abstract class BaseResourceTreeManager extends BaseResourceManager
     public function findOneByCodigo($code)
     {
         $qb = parent::createBaseQueryBuilder();
-        $qb->andWhere($qb->getRootAliases()[0] . '.codigo = ' . $this->addParameter('codigo', $code, $qb));
+        $qb->andWhere($qb->getRootAliases()[0] . '.codigo = ' . $this->addNamedParameter('codigo', $code, $qb));
         $root = $qb->getQuery()->getOneOrNullResult();
         return $root;
     }
@@ -188,7 +188,7 @@ abstract class BaseResourceTreeManager extends BaseResourceManager
     public function findChildrenByParentId($parent_id)
     {
         $qb = $this->createQueryBuilder();
-        $qb->andWhere($qb->getRootAliases()[0] . '.parent = ' . $this->addParameter('parent', $parent_id, $qb))
+        $qb->andWhere($qb->getRootAliases()[0] . '.parent = ' . $this->addNamedParameter('parent', $parent_id, $qb))
             ->orderBy($qb->getRootAliases()[0] . '.position', 'ASC');
         return $qb->getQuery()->getResult();
     }

@@ -6,12 +6,13 @@
  * Time: 23:44
  */
 
-namespace TechPromux\Bundle\BaseBundle\Manager\Resource\Owner\DefaultUser;
+namespace TechPromux\Bundle\BaseBundle\Manager\Owner\DefaultUser;
 
 
-use TechPromux\Bundle\BaseBundle\Entity\DefaultUserResourceOwner;
+use TechPromux\Bundle\BaseBundle\Entity\Owner\DefaultUser\DefaultUserResourceOwner;
+use TechPromux\Bundle\BaseBundle\Manager\Owner\BaseResourceOwnerManager;
 use TechPromux\Bundle\BaseBundle\Manager\Resource\BaseResourceManager;
-use TechPromux\Bundle\BaseBundle\Manager\Resource\Owner\BaseResourceOwnerManager;
+use TechPromux\Bundle\BaseBundle\Manager\Security\BaseSecurityManager;
 
 
 class DefaultUserResourceOwnerManager extends BaseResourceManager implements BaseResourceOwnerManager
@@ -22,7 +23,7 @@ class DefaultUserResourceOwnerManager extends BaseResourceManager implements Bas
      */
     public function getBundleName()
     {
-        return 'TechPromuxBaseBundle';
+        return $this->getBaseBundleName();
     }
 
     /**
@@ -45,8 +46,34 @@ class DefaultUserResourceOwnerManager extends BaseResourceManager implements Bas
         return 'DefaultUserResourceOwner';
     }
 
+    public function getResourceClassShortcut()
+    {
+        return $this->getBundleName() . ':Owner\\DefaultUser\\' . $this->getResourceName();
+    }
     //---------------------------------------------------------------------------
 
+    /**
+     * @var BaseSecurityManager
+     */
+    private $security_manager;
+
+    /**
+     * @return BaseSecurityManager
+     */
+    public function getSecurityManager()
+    {
+        return $this->security_manager;
+    }
+
+    /**
+     * @param BaseSecurityManager $security_manager
+     * @return DefaultUserResourceOwnerManager
+     */
+    public function setSecurityManager($security_manager)
+    {
+        $this->security_manager = $security_manager;
+        return $this;
+    }
 
     /**
      *
@@ -55,13 +82,13 @@ class DefaultUserResourceOwnerManager extends BaseResourceManager implements Bas
      */
     public function findOwnerFromUserByUserId($userid)
     {
-        $user = $this->findUserById($userid);
+        $user = $this->getSecurityManager()->findUserById($userid);
 
         $owner = $this->findOneOrNullBy(array('user' => $userid));
         /* @var $owner DefaultUserResourceOwner */
 
         if (is_null($owner)) {
-            $owner = $this->createNewInstance();
+            $owner = $this->createNewInstance(); // pasar el user manager
             $user = $this->findUserById($userid);
             $owner->setUser($user);
             $this->persist($owner);
@@ -77,7 +104,7 @@ class DefaultUserResourceOwnerManager extends BaseResourceManager implements Bas
      */
     public function findOwnerOfAuthenticatedUser()
     {
-        $user = $this->findAuthenticatedUser();
+        $user = $this->getSecurityManager()->findAuthenticatedUser();
 
         $owner = $this->findOwnerFromUserByUserId($user->getId());
 

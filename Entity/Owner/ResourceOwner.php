@@ -1,6 +1,6 @@
 <?php
 
-namespace TechPromux\Bundle\BaseBundle\Entity\Resource\Owner;
+namespace TechPromux\Bundle\BaseBundle\Entity\Owner;
 
 /**
  * BaseUserResourceOwner

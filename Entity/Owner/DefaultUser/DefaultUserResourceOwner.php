@@ -1,9 +1,9 @@
 <?php
 
-namespace TechPromux\Bundle\BaseBundle\Entity;
+namespace TechPromux\Bundle\BaseBundle\Entity\Owner\DefaultUser;
 
 use Doctrine\ORM\Mapping as ORM;
-use TechPromux\Bundle\BaseBundle\Entity\Resource\Owner\ResourceOwner;
+use TechPromux\Bundle\BaseBundle\Entity\Owner\ResourceOwner;
 use TechPromux\Bundle\BaseBundle\Entity\Resource\BaseResource;
 
 /**
@@ -15,6 +15,7 @@ use TechPromux\Bundle\BaseBundle\Entity\Resource\BaseResource;
 class DefaultUserResourceOwner extends BaseResource implements ResourceOwner
 {
     /**
+     * TODO cambiar por user interface
      * @var \Sonata\UserBundle\Entity\BaseUser
      *
      * @ORM\OneToOne(targetEntity="Sonata\UserBundle\Entity\BaseUser")

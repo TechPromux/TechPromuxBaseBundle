@@ -51,7 +51,7 @@ abstract class BaseResourceTreeAdmin extends BaseResourceAdmin {
 
         $query = parent::createQuery($context);
 
-        $this->getResourceManager()->alterBaseQuery($query);
+        $this->getResourceManager()->alterBaseQueryBuilder($query);
 
         $request = $this->getRequest();
 

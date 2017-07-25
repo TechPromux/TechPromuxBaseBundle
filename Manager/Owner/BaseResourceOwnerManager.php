@@ -6,9 +6,9 @@
  * Time: 00:14
  */
 
-namespace TechPromux\Bundle\BaseBundle\Manager\Resource\Owner;
+namespace TechPromux\Bundle\BaseBundle\Manager\Owner;
 
-use TechPromux\Bundle\BaseBundle\Entity\Resource\Owner\ResourceOwner;
+use TechPromux\Bundle\BaseBundle\Entity\Owner\ResourceOwner;
 
 
 interface BaseResourceOwnerManager

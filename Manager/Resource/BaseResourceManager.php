@@ -3,7 +3,7 @@
 namespace TechPromux\Bundle\BaseBundle\Manager\Resource;
 
 use TechPromux\Bundle\BaseBundle\Entity\BaseResource;
-use TechPromux\Bundle\BaseBundle\Entity\Resource\Owner\HasResourceOwner;
+use TechPromux\Bundle\BaseBundle\Entity\Owner\HasResourceOwner;
 use TechPromux\Bundle\BaseBundle\Manager\BaseManager;
 use TechPromux\Bundle\BaseBundle\Manager\Owner\BaseResourceOwnerManager;
 
@@ -23,7 +23,14 @@ abstract class BaseResourceManager extends BaseManager
     abstract public function getResourceClass();
 
     /**
-     * Obtiene el shortcut de la clase de la entidad
+     * Get entity short name
+     *
+     * @return string
+     */
+    abstract public function getResourceName();
+
+    /**
+     * Get Managed Entity Shortcut name
      *
      * @return string
      */
@@ -32,42 +39,35 @@ abstract class BaseResourceManager extends BaseManager
         return $this->getBundleName() . ':' . $this->getResourceName();
     }
 
-    /**
-     * Get entity short name
-     *
-     * @return string
-     */
-    abstract public function getResourceName();
-
     //--------------------------------------------------------------------------
+
+    /**
+     * @var BaseResourceOwnerManager
+     */
+    private $resource_owner_manager;
 
     /**
      * @return BaseResourceOwnerManager
      */
     public function getResourceOwnerManager()
     {
-        return $this->service_container->get($this->getResourceOwnerManagerID());
+        return $this->resource_owner_manager;
     }
 
     /**
-     * @return string
+     * @param BaseResourceOwnerManager $resource_owner_manager
+     * @return BaseResourceManager
      */
-    public function getResourceOwnerManagerID()
+    public function setResourceOwnerManager($resource_owner_manager)
     {
-        return $this->getDefaultResourceOwnerManagerID();
+        $this->resource_owner_manager = $resource_owner_manager;
+        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getDefaultResourceOwnerManagerID()
-    {
-        return 'techpromux_base.manager.default_resource_owner';
-    }
     //--------------------------------------------------------------------------
 
     /**
-     * Obtiene el Entity Repository de la Entidad o de otra indicada.
+     * Get Entity Repository for an Entity Class
      *
      * @param class $class
      *
@@ -75,11 +75,11 @@ abstract class BaseResourceManager extends BaseManager
      */
     protected function getDoctrineEntityRepository($class = null)
     {
-        return $this->getDoctrineEntityManager()->getRepository($class ?: $this->getResourceClassShortcut());
+        return $this->getEntityManager()->getRepository($class ?: $this->getResourceClass());
     }
 
     /**
-     * Crear un $query para la Entidad
+     * Create an queryBuilder object for an Entity class
      *
      * @param class $class
      *
@@ -92,7 +92,7 @@ abstract class BaseResourceManager extends BaseManager
     }
 
     /**
-     * Crear un $query para la Entidad añadiendo parámetros personalizados
+     * Create an queryBuilder object for an Entity class
      *
      * @param array $criteria
      * @param array $orderBy
@@ -104,31 +104,31 @@ abstract class BaseResourceManager extends BaseManager
      */
     public function createQueryBuilder(array $criteria = null, array $orderBy = null, $limit = null, $offset = null, $class = null)
     {
-        $baseQuery = $this->createBaseQueryBuilder($class);
+        $baseQueryBuilder = $this->createBaseQueryBuilder($class);
 
-        $query = $this->alterBaseQuery($baseQuery);
+        $queryBuilder = $this->alterBaseQueryBuilder($baseQueryBuilder);
 
         if (!is_null($criteria)) {
             foreach ($criteria as $key => $value) {
-                $query->andWhere($query->getRootAliases()[0] . '.' . $key . ' = ' . $this->addParameter($key, $value, $query));
+                $queryBuilder->andWhere($queryBuilder->getRootAliases()[0] . '.' . $key . ' = ' . $this->addNamedParameter($key, $value, $queryBuilder));
             }
         }
 
         if (!is_null($orderBy)) {
             foreach ($orderBy as $sort => $order) {
-                $query->addOrderBy($query->getRootAliases()[0] . '.' . $sort, $order);
+                $queryBuilder->addOrderBy($queryBuilder->getRootAliases()[0] . '.' . $sort, $order);
             }
         }
 
         if (!is_null($limit)) {
-            $query->setMaxResults($limit);
+            $queryBuilder->setMaxResults($limit);
         }
 
         if (!is_null($offset)) {
-            $query->setFirstResult($offset);
+            $queryBuilder->setFirstResult($offset);
         }
 
-        return $query;
+        return $queryBuilder;
     }
 
     /**
@@ -139,7 +139,7 @@ abstract class BaseResourceManager extends BaseManager
      * @param string $action
      * @return \Doctrine\ORM\QueryBuilder
      */
-    public function alterBaseQuery($query, $options = array(), $action = 'list')
+    public function alterBaseQueryBuilder($query, $options = array(), $action = 'list')
     {
         if ($this->getManagedResourceHasOwnerProperty()) {
             $owner = $this->getResourceOwnerManager()->findOwnerOfAuthenticatedUser();
@@ -147,7 +147,7 @@ abstract class BaseResourceManager extends BaseManager
             $query->andWhere(
                 $query->getRootAliases()[0] . '.' . $parameterName
                 . '=' .
-                $this->addParameter($parameterName, $owner->getId(), $query, null)
+                $this->addNamedParameter($parameterName, $owner->getId(), $query, null)
             );
         }
         return $query;
@@ -215,7 +215,7 @@ abstract class BaseResourceManager extends BaseManager
     {
         //$qb = parent::createBaseQueryBuilder();
         $qb = $this->createBaseQueryBuilder();
-        $qb->andWhere($qb->getRootAliases()[0] . '.name = ' . $this->addParameter('name', $name, $qb));
+        $qb->andWhere($qb->getRootAliases()[0] . '.name = ' . $this->addNamedParameter('name', $name, $qb));
         $root = $qb->getQuery()->getOneOrNullResult();
         return $root;
     }
@@ -337,7 +337,7 @@ abstract class BaseResourceManager extends BaseManager
 
         if (!is_null($resource)) {
             $query = $this->createQueryBuilder();
-            $query->andWhere($query->getRootAliases()[0] . '.id = ' . $this->addParameter('id', $resource, $query));
+            $query->andWhere($query->getRootAliases()[0] . '.id = ' . $this->addNamedParameter('id', $resource, $query));
             $result = $this->getOneOrNullResultFromQueryBuilder($query);
             if ($result) {
                 return true;
@@ -370,7 +370,7 @@ abstract class BaseResourceManager extends BaseManager
     public function persist($object, $flushed = true)
     {
         $this->prePersist($object);
-        $em = $this->getDoctrineEntityManager();
+        $em = $this->getEntityManager();
         $em->persist($object);
         if ($flushed) {
             $em->flush($object);
@@ -388,7 +388,7 @@ abstract class BaseResourceManager extends BaseManager
      */
     public function persistWithoutPreAndPostPersist($object, $flushed = true)
     {
-        $em = $this->getDoctrineEntityManager();
+        $em = $this->getEntityManager();
         $em->persist($object);
         if ($flushed) {
             $em->flush($object);
@@ -438,7 +438,7 @@ abstract class BaseResourceManager extends BaseManager
     public function update($object, $flushed = true)
     {
         $this->preUpdate($object, $flushed);
-        $em = $this->getDoctrineEntityManager();
+        $em = $this->getEntityManager();
         $em->persist($object);
         if ($flushed) {
             $em->flush($object);
@@ -456,7 +456,7 @@ abstract class BaseResourceManager extends BaseManager
      */
     public function updateWithoutPreAndPostUpdate($object, $flushed = true)
     {
-        $em = $this->getDoctrineEntityManager();
+        $em = $this->getEntityManager();
         $em->persist($object);
         if ($flushed) {
             $em->flush($object);
@@ -497,7 +497,7 @@ abstract class BaseResourceManager extends BaseManager
     public function remove($object, $flushed = true)
     {
         $this->preRemove($object, $flushed);
-        $em = $this->getDoctrineEntityManager();
+        $em = $this->getEntityManager();
         $em->remove($object);
         if ($flushed) {
             $em->flush($object);
@@ -515,7 +515,7 @@ abstract class BaseResourceManager extends BaseManager
      */
     public function removeWithoutPreAndPostRemove($object, $flushed = true)
     {
-        $em = $this->getDoctrineEntityManager();
+        $em = $this->getEntityManager();
         $em->remove($object);
         if ($flushed) {
             $em->flush($object);
