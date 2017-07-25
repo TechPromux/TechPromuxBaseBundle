@@ -1,4 +1,4 @@
-# TechPromux Base Bundle: Main Core bundle for TechPromux solutions bundles
+# TechPromux Base Bundle: Core bundle for TechPromux solutions
 
 This project is a symfony based bundle with multiples customized elements.
 
@@ -11,14 +11,12 @@ You only need download it and use it with a little effort.
 We hope that this project contribute to your work with Symfony.
 
 # Instalation
------------------
 
 Open a console in root project folder and execute following command:
 
     composer install techpromux/base-bundle
 
 # Configuration
------------------
 
 For custom database and other options edit files:
 
