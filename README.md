@@ -1,4 +1,4 @@
-# TechPromux Base Bundle: Core bundle for TechPromux solutions
+# TechPromux Base Bundle: Core for TechPromux solutions
 
 This project is a symfony based bundle with multiples customized elements.
 
