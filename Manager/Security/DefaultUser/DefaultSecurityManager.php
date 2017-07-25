@@ -6,10 +6,10 @@
  * Time: 17:55
  */
 
-namespace TechPromux\Bundle\BaseBundle\Manager\Security\DefaultUser;
+namespace  TechPromux\BaseBundle\Manager\Security\DefaultUser;
 
 
-use TechPromux\Bundle\BaseBundle\Manager\Security\BaseSecurityManager;
+use  TechPromux\BaseBundle\Manager\Security\BaseSecurityManager;
 
 class DefaultSecurityManager extends BaseSecurityManager
 {

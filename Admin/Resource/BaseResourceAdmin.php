@@ -1,15 +1,15 @@
 <?php
 
-namespace TechPromux\Bundle\BaseBundle\Admin\Resource;
+namespace  TechPromux\BaseBundle\Admin\Resource;
 
 use Sonata\CoreBundle\Validator\ErrorElement;
-use TechPromux\Bundle\BaseBundle\Admin\BaseAdmin;
-use TechPromux\Bundle\BaseBundle\Entity\Resource\BaseResource;
-use TechPromux\Bundle\BaseBundle\Manager\Resource\BaseResourceManager;
+use  TechPromux\BaseBundle\Admin\BaseAdmin;
+use  TechPromux\BaseBundle\Entity\Resource\BaseResource;
+use  TechPromux\BaseBundle\Manager\Resource\BaseResourceManager;
 
 /**
  * Class BaseResourceAdmin
- * @package TechPromux\Bundle\BaseBundle\Admin\Resource
+ * @package  TechPromux\BaseBundle\Admin\Resource
  */
 abstract class BaseResourceAdmin extends BaseAdmin
 {

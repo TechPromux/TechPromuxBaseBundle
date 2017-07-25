@@ -1,6 +1,6 @@
 <?php
 
-namespace TechPromux\Bundle\BaseBundle\Event;
+namespace  TechPromux\BaseBundle\Event;
 
 abstract class BaseEvent extends \Symfony\Component\EventDispatcher\Event {
 

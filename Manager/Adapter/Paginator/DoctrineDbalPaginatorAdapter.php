@@ -1,6 +1,6 @@
 <?php
 
-namespace TechPromux\Bundle\BaseBundle\Manager\Adapter\Paginator;
+namespace  TechPromux\BaseBundle\Manager\Adapter\Paginator;
 
 use Doctrine\DBAL\Query\QueryBuilder;
 use Pagerfanta\Exception\InvalidArgumentException;

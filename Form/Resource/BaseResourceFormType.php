@@ -6,9 +6,9 @@
  * Time: 0:37
  */
 
-namespace TechPromux\Bundle\BaseBundle\Form\Resource;
+namespace  TechPromux\BaseBundle\Form\Resource;
 
-use TechPromux\Bundle\BaseBundle\Manager\Resource\BaseResourceManager;
+use  TechPromux\BaseBundle\Manager\Resource\BaseResourceManager;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;

@@ -1,10 +1,10 @@
 <?php
 
-namespace TechPromux\Bundle\BaseBundle\Entity\Owner\DefaultUser;
+namespace  TechPromux\BaseBundle\Entity\Owner\DefaultUser;
 
 use Doctrine\ORM\Mapping as ORM;
-use TechPromux\Bundle\BaseBundle\Entity\Owner\ResourceOwner;
-use TechPromux\Bundle\BaseBundle\Entity\Resource\BaseResource;
+use  TechPromux\BaseBundle\Entity\Owner\ResourceOwner;
+use  TechPromux\BaseBundle\Entity\Resource\BaseResource;
 
 /**
  * BaseUserResourceOwner

@@ -6,13 +6,13 @@
  * Time: 23:44
  */
 
-namespace TechPromux\Bundle\BaseBundle\Manager\Owner\DefaultUser;
+namespace  TechPromux\BaseBundle\Manager\Owner\DefaultUser;
 
 
-use TechPromux\Bundle\BaseBundle\Entity\Owner\DefaultUser\DefaultUserResourceOwner;
-use TechPromux\Bundle\BaseBundle\Manager\Owner\BaseResourceOwnerManager;
-use TechPromux\Bundle\BaseBundle\Manager\Resource\BaseResourceManager;
-use TechPromux\Bundle\BaseBundle\Manager\Security\BaseSecurityManager;
+use  TechPromux\BaseBundle\Entity\Owner\DefaultUser\DefaultUserResourceOwner;
+use  TechPromux\BaseBundle\Manager\Owner\BaseResourceOwnerManager;
+use  TechPromux\BaseBundle\Manager\Resource\BaseResourceManager;
+use  TechPromux\BaseBundle\Manager\Security\BaseSecurityManager;
 
 
 class DefaultUserResourceOwnerManager extends BaseResourceManager implements BaseResourceOwnerManager

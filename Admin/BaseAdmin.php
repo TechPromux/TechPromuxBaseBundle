@@ -1,6 +1,6 @@
 <?php
 
-namespace TechPromux\Bundle\BaseBundle\Admin;
+namespace  TechPromux\BaseBundle\Admin;
 
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
@@ -11,7 +11,7 @@ use Sonata\CoreBundle\Validator\ErrorElement;
 
 /**
  * Class BaseAdmin
- * @package TechPromux\Bundle\BaseBundle\Admin
+ * @package  TechPromux\BaseBundle\Admin
  */
 abstract class BaseAdmin extends AbstractAdmin
 {

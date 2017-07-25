@@ -1,6 +1,6 @@
 <?php
 
-namespace TechPromux\Bundle\BaseBundle\Manager;
+namespace  TechPromux\BaseBundle\Manager;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -14,7 +14,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 /**
  * Class BaseManager
  *
- * @package TechPromux\Bundle\BaseBundle\Manager
+ * @package  TechPromux\BaseBundle\Manager
  */
 abstract class BaseManager
 {

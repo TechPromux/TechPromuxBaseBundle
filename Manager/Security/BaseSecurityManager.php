@@ -6,12 +6,12 @@
  * Time: 10:25
  */
 
-namespace TechPromux\Bundle\BaseBundle\Manager\Security;
+namespace  TechPromux\BaseBundle\Manager\Security;
 
 
 use FOS\UserBundle\Model\GroupManager;
 use FOS\UserBundle\Model\UserManager;
-use TechPromux\Bundle\BaseBundle\Manager\BaseManager;
+use  TechPromux\BaseBundle\Manager\BaseManager;
 
 abstract class BaseSecurityManager extends BaseManager
 {

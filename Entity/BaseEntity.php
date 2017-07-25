@@ -1,6 +1,6 @@
 <?php
 
-namespace TechPromux\Bundle\BaseBundle\Entity;
+namespace  TechPromux\BaseBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 

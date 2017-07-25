@@ -1,12 +1,12 @@
 services:
 #    tech_promux_core.example:
-#        class: TechPromux\Bundle\BaseBundle\Example
+#        class:  TechPromux\BaseBundle\Example
 #        arguments: ["@service_id", "plain_value", "%parameter%"]
 
     # Manager Services
 
     techpromux_base.manager.default_user_security:
-        class: TechPromux\Bundle\BaseBundle\Manager\Security\DefaultUser\DefaultSecurityManager
+        class:  TechPromux\BaseBundle\Manager\Security\DefaultUser\DefaultSecurityManager
         arguments: [~]
         tags:
             - { name: techpromux.manager}
@@ -23,7 +23,7 @@ services:
 
 
     techpromux_base.manager.default_user_resource_owner:
-        class: TechPromux\Bundle\BaseBundle\Manager\Owner\DefaultUser\DefaultUserResourceOwnerManager
+        class:  TechPromux\BaseBundle\Manager\Owner\DefaultUser\DefaultUserResourceOwnerManager
         arguments: [~]
         tags:
             - { name: techpromux.manager}

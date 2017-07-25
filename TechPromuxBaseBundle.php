@@ -1,11 +1,11 @@
 <?php
 
-namespace TechPromux\Bundle\BaseBundle;
+namespace  TechPromux\BaseBundle;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
-use TechPromux\Bundle\BaseBundle\Compiler\ManagerCompilerPass;
-use TechPromux\Bundle\BaseBundle\Compiler\ResourceManagerCompilerPass;
+use  TechPromux\BaseBundle\Compiler\ManagerCompilerPass;
+use  TechPromux\BaseBundle\Compiler\ResourceManagerCompilerPass;
 
 class TechPromuxBaseBundle extends Bundle
 {

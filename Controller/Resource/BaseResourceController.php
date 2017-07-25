@@ -1,8 +1,8 @@
 <?php
 
-namespace TechPromux\Bundle\BaseBundle\Controller\Resource;
+namespace  TechPromux\BaseBundle\Controller\Resource;
 
-use TechPromux\Bundle\BaseBundle\Form\Resource\BaseResourceFormType;
+use  TechPromux\BaseBundle\Form\Resource\BaseResourceFormType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\FormTypeInterface;
@@ -19,7 +19,7 @@ use Hateoas\Representation\CollectionRepresentation;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-use TechPromux\Bundle\BaseBundle\Manager\Resource\BaseResourceManager;
+use  TechPromux\BaseBundle\Manager\Resource\BaseResourceManager;
 
 /**
  * BaseResourceController

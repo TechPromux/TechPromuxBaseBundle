@@ -1,9 +1,9 @@
 <?php
 
-namespace TechPromux\Bundle\BaseBundle\Entity\Resource;
+namespace  TechPromux\BaseBundle\Entity\Resource;
 
 use Doctrine\ORM\Mapping as ORM;
-use TechPromux\Bundle\BaseBundle\Entity\BaseEntity;
+use  TechPromux\BaseBundle\Entity\BaseEntity;
 
 /**
  * BaseResource

@@ -1,11 +1,11 @@
 <?php
 
-namespace TechPromux\Bundle\BaseBundle\Manager\Resource;
+namespace  TechPromux\BaseBundle\Manager\Resource;
 
-use TechPromux\Bundle\BaseBundle\Entity\BaseResource;
-use TechPromux\Bundle\BaseBundle\Entity\Owner\HasResourceOwner;
-use TechPromux\Bundle\BaseBundle\Manager\BaseManager;
-use TechPromux\Bundle\BaseBundle\Manager\Owner\BaseResourceOwnerManager;
+use  TechPromux\BaseBundle\Entity\BaseResource;
+use  TechPromux\BaseBundle\Entity\Owner\HasResourceOwner;
+use  TechPromux\BaseBundle\Manager\BaseManager;
+use  TechPromux\BaseBundle\Manager\Owner\BaseResourceOwnerManager;
 
 /**
  * BaseResourceManager define funciones básicas para todos los Managers de Resources
@@ -173,7 +173,7 @@ abstract class BaseResourceManager extends BaseManager
      *
      * @param mixed $id
      *
-     * @return \TechPromux\Bundle\BaseBundle\Entity\Resource\BaseResource
+     * @return \ TechPromux\BaseBundle\Entity\Resource\BaseResource
      *
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
@@ -190,7 +190,7 @@ abstract class BaseResourceManager extends BaseManager
      * Obtiene el elemento con valores indicados o lanza un error (404 Not Found Http Exception).
      *
      * @param array $criteria
-     * @return \TechPromux\Bundle\BaseBundle\Entity\Resource\BaseResource
+     * @return \ TechPromux\BaseBundle\Entity\Resource\BaseResource
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
     public function findOneBy(array $criteria)
@@ -209,7 +209,7 @@ abstract class BaseResourceManager extends BaseManager
      * Obtiene un único nodo existente dado un codigo
      *
      * @param string $name
-     * @return \TechPromux\Bundle\BaseBundle\Entity\Resource\BaseResourceTree
+     * @return \ TechPromux\BaseBundle\Entity\Resource\BaseResourceTree
      */
     public function findOneByName($name)
     {
@@ -224,7 +224,7 @@ abstract class BaseResourceManager extends BaseManager
      * Obtiene el elemento con valores indicados o null si no existe.
      *
      * @param array $criteria
-     * @return \TechPromux\Bundle\BaseBundle\Entity\Resource\BaseResource
+     * @return \ TechPromux\BaseBundle\Entity\Resource\BaseResource
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
     public function findOneOrNullBy(array $criteria)
@@ -352,7 +352,7 @@ abstract class BaseResourceManager extends BaseManager
     /**
      * Obtiene una instancia nueva de la Entidad
      *
-     * @return \TechPromux\Bundle\BaseBundle\Entity\Resource\BaseResource
+     * @return \ TechPromux\BaseBundle\Entity\Resource\BaseResource
      */
     public function createNewInstance()
     {
@@ -363,9 +363,9 @@ abstract class BaseResourceManager extends BaseManager
     /**
      * Salva el elemento
      *
-     * @param \TechPromux\Bundle\BaseBundle\Entity\Resource\BaseResource $object
+     * @param \ TechPromux\BaseBundle\Entity\Resource\BaseResource $object
      * @param boolean $flushed
-     * @return \TechPromux\Bundle\BaseBundle\Entity\Resource\BaseResource
+     * @return \ TechPromux\BaseBundle\Entity\Resource\BaseResource
      */
     public function persist($object, $flushed = true)
     {
@@ -382,9 +382,9 @@ abstract class BaseResourceManager extends BaseManager
     /**
      * Salva el elemento sin ejecutar le PrePersist ni el PostPersist
      *
-     * @param \TechPromux\Bundle\BaseBundle\Entity\Resource\BaseResource $object
+     * @param \ TechPromux\BaseBundle\Entity\Resource\BaseResource $object
      * @param boolean $flushed
-     * @return \TechPromux\Bundle\BaseBundle\Entity\Resource\BaseResource
+     * @return \ TechPromux\BaseBundle\Entity\Resource\BaseResource
      */
     public function persistWithoutPreAndPostPersist($object, $flushed = true)
     {
@@ -399,8 +399,8 @@ abstract class BaseResourceManager extends BaseManager
     /**
      * Acciones antes de salvar el elemento
      *
-     * @param \TechPromux\Bundle\BaseBundle\Entity\Resource\BaseResource $object
-     * @return \TechPromux\Bundle\BaseBundle\Entity\Resource\BaseResource
+     * @param \ TechPromux\BaseBundle\Entity\Resource\BaseResource $object
+     * @return \ TechPromux\BaseBundle\Entity\Resource\BaseResource
      */
     public function prePersist($object)
     {
@@ -420,8 +420,8 @@ abstract class BaseResourceManager extends BaseManager
     /**
      * Acciones después de salvar el elemento
      *
-     * @param \TechPromux\Bundle\BaseBundle\Entity\Resource\BaseResource $object
-     * @return \TechPromux\Bundle\BaseBundle\Entity\Resource\BaseResource
+     * @param \ TechPromux\BaseBundle\Entity\Resource\BaseResource $object
+     * @return \ TechPromux\BaseBundle\Entity\Resource\BaseResource
      */
     public function postPersist($object)
     {
@@ -431,9 +431,9 @@ abstract class BaseResourceManager extends BaseManager
     /**
      * Actualiza el elemento
      *
-     * @param \TechPromux\Bundle\BaseBundle\Entity\Resource\BaseResource $object
+     * @param \ TechPromux\BaseBundle\Entity\Resource\BaseResource $object
      * @param boolean $flushed
-     * @return \TechPromux\Bundle\BaseBundle\Entity\Resource\BaseResource
+     * @return \ TechPromux\BaseBundle\Entity\Resource\BaseResource
      */
     public function update($object, $flushed = true)
     {
@@ -450,9 +450,9 @@ abstract class BaseResourceManager extends BaseManager
     /**
      * Actualiza el elemento sin ejecutar el PreUpdate o el PostUpdate
      *
-     * @param \TechPromux\Bundle\BaseBundle\Entity\Resource\BaseResource $object
+     * @param \ TechPromux\BaseBundle\Entity\Resource\BaseResource $object
      * @param boolean $flushed
-     * @return \TechPromux\Bundle\BaseBundle\Entity\Resource\BaseResource
+     * @return \ TechPromux\BaseBundle\Entity\Resource\BaseResource
      */
     public function updateWithoutPreAndPostUpdate($object, $flushed = true)
     {
@@ -467,8 +467,8 @@ abstract class BaseResourceManager extends BaseManager
     /**
      * Acciones antes de actualizar el elemento
      *
-     * @param \TechPromux\Bundle\BaseBundle\Entity\Resource\BaseResource $object
-     * @return \TechPromux\Bundle\BaseBundle\Entity\Resource\BaseResource
+     * @param \ TechPromux\BaseBundle\Entity\Resource\BaseResource $object
+     * @return \ TechPromux\BaseBundle\Entity\Resource\BaseResource
      */
     public function preUpdate($object)
     {
@@ -479,8 +479,8 @@ abstract class BaseResourceManager extends BaseManager
     /**
      * Acciones después de salvar el elemento
      *
-     * @param \TechPromux\Bundle\BaseBundle\Entity\Resource\BaseResource $object
-     * @return \TechPromux\Bundle\BaseBundle\Entity\Resource\BaseResource
+     * @param \ TechPromux\BaseBundle\Entity\Resource\BaseResource $object
+     * @return \ TechPromux\BaseBundle\Entity\Resource\BaseResource
      */
     public function postUpdate($object)
     {
@@ -490,9 +490,9 @@ abstract class BaseResourceManager extends BaseManager
     /**
      * Elimina el elemento
      *
-     * @param \TechPromux\Bundle\BaseBundle\Entity\Resource\BaseResource $object
+     * @param \ TechPromux\BaseBundle\Entity\Resource\BaseResource $object
      * @param boolean $flushed
-     * @return \TechPromux\Bundle\BaseBundle\Entity\Resource\BaseResource
+     * @return \ TechPromux\BaseBundle\Entity\Resource\BaseResource
      */
     public function remove($object, $flushed = true)
     {
@@ -509,9 +509,9 @@ abstract class BaseResourceManager extends BaseManager
     /**
      * Elimina el elemento sin ejecutar el PreRemove o el PostRemove
      *
-     * @param \TechPromux\Bundle\BaseBundle\Entity\Resource\BaseResource $object
+     * @param \ TechPromux\BaseBundle\Entity\Resource\BaseResource $object
      * @param boolean $flushed
-     * @return \TechPromux\Bundle\BaseBundle\Entity\Resource\BaseResource
+     * @return \ TechPromux\BaseBundle\Entity\Resource\BaseResource
      */
     public function removeWithoutPreAndPostRemove($object, $flushed = true)
     {
@@ -526,8 +526,8 @@ abstract class BaseResourceManager extends BaseManager
     /**
      * Acciones antes de eliminar el elemento
      *
-     * @param \TechPromux\Bundle\BaseBundle\Entity\Resource\BaseResource $object
-     * @return \TechPromux\Bundle\BaseBundle\Entity\Resource\BaseResource
+     * @param \ TechPromux\BaseBundle\Entity\Resource\BaseResource $object
+     * @return \ TechPromux\BaseBundle\Entity\Resource\BaseResource
      */
     public function preRemove($object)
     {
@@ -537,8 +537,8 @@ abstract class BaseResourceManager extends BaseManager
     /**
      * Acciones después de eliminar el elemento
      *
-     * @param \TechPromux\Bundle\BaseBundle\Entity\Resource\BaseResource $object
-     * @return \TechPromux\Bundle\BaseBundle\Entity\Resource\BaseResource
+     * @param \ TechPromux\BaseBundle\Entity\Resource\BaseResource $object
+     * @return \ TechPromux\BaseBundle\Entity\Resource\BaseResource
      */
     public function postRemove($object)
     {
