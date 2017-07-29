@@ -28,7 +28,7 @@ abstract class BaseResourceTreeAdmin extends BaseResourceAdmin {
 
     /**
      * 
-     * @return \ TechPromux\BaseBundle\Manager\BaseResourceTreeManager
+     * @return \TechPromux\BaseBundle\Manager\BaseResourceTreeManager
      */
     public function getResourceManager() {
         return parent::getResourceManager();
@@ -36,7 +36,7 @@ abstract class BaseResourceTreeAdmin extends BaseResourceAdmin {
 
     /**
      * 
-     * @return \ TechPromux\BaseBundle\Entity\BaseResourceTree
+     * @return \TechPromux\BaseBundle\Entity\BaseResourceTree
      */
     public function getSubject() {
         return parent::getSubject();
@@ -132,7 +132,7 @@ abstract class BaseResourceTreeAdmin extends BaseResourceAdmin {
 
         parent::configureFormFields($formMapper);
 
-        $object = $this->getSubject(); /* @var \ TechPromux\BaseBundle\Entity\BaseResourceTree $object */
+        $object = $this->getSubject(); /* @var \TechPromux\BaseBundle\Entity\BaseResourceTree $object */
 
         if ($object && $object->getParent() && is_null($object->getParent()->getParent())) {
             $object->setParent(null);
@@ -164,7 +164,7 @@ abstract class BaseResourceTreeAdmin extends BaseResourceAdmin {
                         )
                 );
             } else {
-                $manager = $this->getResourceManager(); /* @var $manager \ TechPromux\BaseBundle\Manager\BaseResourceTreeManager  */
+                $manager = $this->getResourceManager(); /* @var $manager \TechPromux\BaseBundle\Manager\BaseResourceTreeManager  */
                 $formMapper
                         ->add('parent', null, array('class' => $this->getResourceManager()->getResourceClassShortcut(),
                             'query_builder' => function(\Doctrine\ORM\EntityRepository $er) use ($manager, $object) {
@@ -208,14 +208,14 @@ abstract class BaseResourceTreeAdmin extends BaseResourceAdmin {
 
     public function getNewInstance() {
 
-        $object = parent::getNewInstance(); /* @var $object \ TechPromux\BaseBundle\Entity\BaseResourceTree */
+        $object = parent::getNewInstance(); /* @var $object \TechPromux\BaseBundle\Entity\BaseResourceTree */
         $object->setPosition(null);
         return $object;
     }
 
     /**
      * @param \Sonata\CoreBundle\Validator\ErrorElement $errorElement
-     * @param \ TechPromux\BaseBundle\Entity\BaseResourceTree $object
+     * @param \TechPromux\BaseBundle\Entity\BaseResourceTree $object
      */
     public function validate(\Sonata\CoreBundle\Validator\ErrorElement $errorElement, $object)
     {
@@ -237,7 +237,7 @@ abstract class BaseResourceTreeAdmin extends BaseResourceAdmin {
     }
 
     /**
-     * @param \ TechPromux\BaseBundle\Entity\BaseResourceTree $object
+     * @param \TechPromux\BaseBundle\Entity\BaseResourceTree $object
      * @return string
      */
     public function toString($object)

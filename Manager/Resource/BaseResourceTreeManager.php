@@ -116,7 +116,7 @@ abstract class BaseResourceTreeManager extends BaseResourceManager
     /**
      * Crea un elemento raiz a partir del cual se define el árbol general
      *
-     * @return \ TechPromux\BaseBundle\Entity\BaseResourceTree
+     * @return \TechPromux\BaseBundle\Entity\BaseResourceTree
      */
     protected function createRootElement()
     {
@@ -140,7 +140,7 @@ abstract class BaseResourceTreeManager extends BaseResourceManager
     /**
      * Obtiene el único nodo raiz base o null si no existe
      *
-     * @return \ TechPromux\BaseBundle\Entity\BaseResourceTree
+     * @return \TechPromux\BaseBundle\Entity\BaseResourceTree
      */
     protected function findBaseRootElementOrNull()
     {
@@ -154,7 +154,7 @@ abstract class BaseResourceTreeManager extends BaseResourceManager
     /**
      * Obtiene el único nodo raiz base (si no existe lo crea)
      *
-     * @return \ TechPromux\BaseBundle\Entity\BaseResourceTree
+     * @return \TechPromux\BaseBundle\Entity\BaseResourceTree
      */
     protected function findBaseRootElement()
     {
@@ -169,7 +169,7 @@ abstract class BaseResourceTreeManager extends BaseResourceManager
      * Obtiene un único nodo existente dado un codigo
      *
      * @param string $code
-     * @return \ TechPromux\BaseBundle\Entity\BaseResourceTree
+     * @return \TechPromux\BaseBundle\Entity\BaseResourceTree
      */
     public function findOneByCodigo($code)
     {
@@ -272,7 +272,7 @@ abstract class BaseResourceTreeManager extends BaseResourceManager
     /**
      * Actualiza las posiciones de los nodos de los subordinados de su superior (su hermanos)
      *
-     * @param \ TechPromux\BaseBundle\Entity\BaseResourceTree $object
+     * @param \TechPromux\BaseBundle\Entity\BaseResourceTree $object
      * @param boolean $remove
      */
     public function updatePositionForSiblingsElements($object, $removed = false)
@@ -310,7 +310,7 @@ abstract class BaseResourceTreeManager extends BaseResourceManager
     /**
      * Actualiza los niveles de todos los elementos
      *
-     * @param \ TechPromux\BaseBundle\Entity\BaseResourceTree $object
+     * @param \TechPromux\BaseBundle\Entity\BaseResourceTree $object
      */
     public function updateLevelForChildrenElements($object)
     {
@@ -353,7 +353,7 @@ abstract class BaseResourceTreeManager extends BaseResourceManager
     /**
      * Actualiza de forma recursiva las posiciones lft y rgt de los nodos
      *
-     * @param \ TechPromux\BaseBundle\Entity\BaseResourceTree $object
+     * @param \TechPromux\BaseBundle\Entity\BaseResourceTree $object
      * @param integer $cont
      * @return integer
      */
@@ -377,7 +377,7 @@ abstract class BaseResourceTreeManager extends BaseResourceManager
     /**
      * Ejecuta las acciones antes de salvar
      *
-     * @param \ TechPromux\BaseBundle\Entity\BaseResourceTree $object
+     * @param \TechPromux\BaseBundle\Entity\BaseResourceTree $object
      */
     public function prePersist($object)
     {
@@ -387,14 +387,14 @@ abstract class BaseResourceTreeManager extends BaseResourceManager
         if (is_null($object->getParent())) {
             //root = $this->findBaseRootElementOrNull();
             $root = $this->findBaseRootElement();
-            /* @var $root \ TechPromux\BaseBundle\Entity\BaseResourceTree */
+            /* @var $root \TechPromux\BaseBundle\Entity\BaseResourceTree */
             $object->setParent($root);
             $object->setLevel(is_null($root) ? -1 : 0);
             $object->setLft(is_null($root) ? 0 : $root->getRgt());
             $object->setRgt(is_null($root) ? 0 : $root->getRgt());
         } else {
             $parent = $object->getParent();
-            /* @var $parent \ TechPromux\BaseBundle\Entity\BaseResourceTree */
+            /* @var $parent \TechPromux\BaseBundle\Entity\BaseResourceTree */
             $object->setLevel($parent->getLevel() + 1);
             $object->setLft($parent->getRgt());
             $object->setRgt($parent->getRgt());
@@ -408,7 +408,7 @@ abstract class BaseResourceTreeManager extends BaseResourceManager
     /**
      * Ejecuta las acciones despues de salvar
      *
-     * @param \ TechPromux\BaseBundle\Entity\BaseResourceTree $object
+     * @param \TechPromux\BaseBundle\Entity\BaseResourceTree $object
      */
     public function postPersist($object)
     {
@@ -423,21 +423,21 @@ abstract class BaseResourceTreeManager extends BaseResourceManager
     /**
      * Ejecuta las acciones antes de actualizar
      *
-     * @param \ TechPromux\BaseBundle\Entity\BaseResourceTree $object
+     * @param \TechPromux\BaseBundle\Entity\BaseResourceTree $object
      */
     public function preUpdate($object)
     {
         parent::preUpdate($object);
         if (is_null($object->getParent())) {
             $root = $this->findBaseRootElementOrNull();
-            /* @var $root \ TechPromux\BaseBundle\Entity\BaseResourceTree */
+            /* @var $root \TechPromux\BaseBundle\Entity\BaseResourceTree */
             $object->setParent($root);
             $object->setLevel(is_null($root) ? -1 : 0);
             $object->setLft(is_null($root) ? 0 : $root->getRgt());
             $object->setRgt(is_null($root) ? 0 : $root->getRgt());
         } else {
             $parent = $object->getParent();
-            /* @var $parent \ TechPromux\BaseBundle\Entity\BaseResourceTree */
+            /* @var $parent \TechPromux\BaseBundle\Entity\BaseResourceTree */
             $object->setLevel($parent->getLevel() + 1);
             $object->setLft($parent->getRgt());
             $object->setRgt($parent->getRgt());
@@ -450,7 +450,7 @@ abstract class BaseResourceTreeManager extends BaseResourceManager
     /**
      * Ejecuta las acciones despues de actualizar
      *
-     * @param \ TechPromux\BaseBundle\Entity\BaseResourceTree $object
+     * @param \TechPromux\BaseBundle\Entity\BaseResourceTree $object
      */
     public function postUpdate($object)
     {
@@ -467,7 +467,7 @@ abstract class BaseResourceTreeManager extends BaseResourceManager
     /**
      * Ejecuta las acciones antes de eliminar
      *
-     * @param \ TechPromux\BaseBundle\Entity\BaseResourceTree $object
+     * @param \TechPromux\BaseBundle\Entity\BaseResourceTree $object
      */
     public function preRemove($object)
     {
@@ -479,7 +479,7 @@ abstract class BaseResourceTreeManager extends BaseResourceManager
     /**
      * Dado un nodo a eliminar, elimina primeramente sus nodos subordinados
      *
-     * @param \ TechPromux\BaseBundle\Entity\BaseResourceTree $object
+     * @param \TechPromux\BaseBundle\Entity\BaseResourceTree $object
      */
     public function removeElementAndChildren($object)
     {
@@ -509,7 +509,7 @@ abstract class BaseResourceTreeManager extends BaseResourceManager
     /**
      * Ejecuta las acciones despues de eliminar un elemento
      *
-     * @param \ TechPromux\BaseBundle\Entity\BaseResourceTree $object
+     * @param \TechPromux\BaseBundle\Entity\BaseResourceTree $object
      */
     public function postRemove($object)
     {
