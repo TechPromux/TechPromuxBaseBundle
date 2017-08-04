@@ -1,6 +1,6 @@
 <?php
 
-namespace  TechPromux\BaseBundle\Compiler;
+namespace TechPromux\BaseBundle\Compiler;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -10,12 +10,6 @@ class ManagerCompilerPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        if (!$container->hasDefinition('doctrine.orm.default_entity_manager')) {
-            return;
-        }
-
-        // TODO take id from parameters?
-
         $entityManagerDefinitionId = 'doctrine.orm.default_entity_manager';
         $jmsSerializerDefinitionId = 'jms_serializer';
         $formFactoryDefinitionId = 'form.factory';

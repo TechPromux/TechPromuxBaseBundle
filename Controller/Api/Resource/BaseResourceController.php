@@ -1,25 +1,13 @@
 <?php
 
-namespace  TechPromux\BaseBundle\Controller\Resource;
+namespace TechPromux\BaseBundle\Controller\Api\Resource;
 
-use  TechPromux\BaseBundle\Form\Resource\BaseResourceFormType;
+use TechPromux\BaseBundle\Form\Type\Resource\BaseResourceFormType;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use FOS\RestBundle\Controller\Annotations as FOSRest;
 use FOS\RestBundle\Controller\FOSRestController;
-use FOS\RestBundle\Request\ParamFetcherInterface;
 use FOS\RestBundle\View\View;
-use Hateoas\Representation\Factory\PagerfantaFactory;
-use Hateoas\Representation\PaginatedRepresentation;
-use Hateoas\Representation\CollectionRepresentation;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-use  TechPromux\BaseBundle\Manager\Resource\BaseResourceManager;
+use TechPromux\BaseBundle\Manager\Resource\BaseResourceManager;
 
 /**
  * BaseResourceController
@@ -35,7 +23,7 @@ abstract class BaseResourceController extends FOSRestController
     abstract protected function getResourceManager();
 
     /**
-     * Devuelve el formulario necesario según una action indicada
+     * Get a form type by action
      *
      * @param string $action
      * @param mixed $object
@@ -44,12 +32,12 @@ abstract class BaseResourceController extends FOSRestController
      * @return BaseResourceFormType
      */
     public function getResourceFormType($action = "POST", $resource = array(), $options = array())
-{
-    $this->getResourceManager()->throwException('Not implemented');
-}
+    {
+        $this->getResourceManager()->throwException('Not implemented');
+    }
 
     /**
-     * Crea, procesa y valida el formulario de una action indicada
+     * Get a processed and validated form
      *
      * @param Request $request
      * @param string $action
@@ -61,24 +49,11 @@ abstract class BaseResourceController extends FOSRestController
     {
         $formType = $this->getResourceFormType($action, $resource, $options);
 
-        //@deprecated
-        //$form = $this->createForm($formType, $resource);
-
         $formBuilder = $this->createFormBuilder($resource, $options);
 
         $formType->configureFormBuilder($formBuilder, $options);
 
         $form = $formBuilder->getForm();
-
-        /*
-	    $format = $request->getRequestFormat() ?: $request->get('_format', 'json');
-
-        if ('html' === $format) {
-            $form->handleRequest($request);
-        } else {
-            $form->submit($request, 'PATCH' !== $action);
-        }
-	    */
 
         $form->handleRequest($request);
 
@@ -160,22 +135,6 @@ abstract class BaseResourceController extends FOSRestController
      */
     protected function checkAccess($action, $resource = null)
     {
-        /*
-         *
-          $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY', null, 'You must be authenticated fully');
-
-         if (in_array($this->get('kernel')->getEnvironment(), array('test', 'dev'))) {
-             $this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN', null);
-             return true;
-         }
-        */
-
-        // ROLE_SIP_COMUN_API_NOMENCLADOR_TIPO_LIST
-        /*
-            $resourceName = $this->getResourceManager()->getResourceName();
-            $role = 'ROLE_' . strtoupper($this->getSnakeBundleName()) . '_API_' . strtoupper($this->getResourceManager()->getResourceName()) . '_' . strtoupper($action);
-            $this->denyAccessUnlessGranted($role, null, 'You must be authorized for action ' . strtoupper($action) . ' of resource ' . strtoupper($resourceName) . ' (' . $role . ')');
-          */
         $this->getResourceManager()->checkAccess($action, $resource);
     }
 

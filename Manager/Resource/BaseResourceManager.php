@@ -1,11 +1,16 @@
 <?php
 
-namespace  TechPromux\BaseBundle\Manager\Resource;
+namespace TechPromux\BaseBundle\Manager\Resource;
 
-use  TechPromux\BaseBundle\Entity\BaseResource;
-use  TechPromux\BaseBundle\Entity\Owner\HasResourceOwner;
-use  TechPromux\BaseBundle\Manager\BaseManager;
-use  TechPromux\BaseBundle\Manager\Owner\BaseResourceOwnerManager;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
+use Symfony\Component\Finder\Exception\AccessDeniedException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use TechPromux\BaseBundle\Entity\Context\HasResourceContext;
+use TechPromux\BaseBundle\Entity\Resource\BaseResource;
+use TechPromux\BaseBundle\Manager\BaseManager;
+use TechPromux\BaseBundle\Manager\Context\BaseResourceContextManager;
 
 /**
  * BaseResourceManager define funciones básicas para todos los Managers de Resources
@@ -29,38 +34,28 @@ abstract class BaseResourceManager extends BaseManager
      */
     abstract public function getResourceName();
 
-    /**
-     * Get Managed Entity Shortcut name
-     *
-     * @return string
-     */
-    public function getResourceClassShortcut()
-    {
-        return $this->getBundleName() . ':' . $this->getResourceName();
-    }
-
     //--------------------------------------------------------------------------
 
     /**
-     * @var BaseResourceOwnerManager
+     * @var BaseResourceContextManager
      */
-    private $resource_owner_manager;
+    private $resource_context_manager;
 
     /**
-     * @return BaseResourceOwnerManager
+     * @return BaseResourceContextManager
      */
-    public function getResourceOwnerManager()
+    public function getResourceContextManager()
     {
-        return $this->resource_owner_manager;
+        return $this->resource_context_manager;
     }
 
     /**
-     * @param BaseResourceOwnerManager $resource_owner_manager
+     * @param BaseResourceContextManager $resource_context_manager
      * @return BaseResourceManager
      */
-    public function setResourceOwnerManager($resource_owner_manager)
+    public function setResourceContextManager($resource_context_manager)
     {
-        $this->resource_owner_manager = $resource_owner_manager;
+        $this->resource_context_manager = $resource_context_manager;
         return $this;
     }
 
@@ -71,7 +66,7 @@ abstract class BaseResourceManager extends BaseManager
      *
      * @param class $class
      *
-     * @return \Doctrine\ORM\EntityRepository
+     * @return EntityRepository
      */
     protected function getDoctrineEntityRepository($class = null)
     {
@@ -83,7 +78,7 @@ abstract class BaseResourceManager extends BaseManager
      *
      * @param class $class
      *
-     * @return \Doctrine\ORM\QueryBuilder
+     * @return QueryBuilder
      */
     protected function createBaseQueryBuilder($class = null)
     {
@@ -100,7 +95,7 @@ abstract class BaseResourceManager extends BaseManager
      * @param int $offset
      * @param class $class
      *
-     * @return \Doctrine\ORM\QueryBuilder
+     * @return QueryBuilder
      */
     public function createQueryBuilder(array $criteria = null, array $orderBy = null, $limit = null, $offset = null, $class = null)
     {
@@ -132,100 +127,119 @@ abstract class BaseResourceManager extends BaseManager
     }
 
     /**
-     * Modificar $query base usado en las funcionalidades estandares
+     * Modify Base Query with custom options
      *
-     * @param \Doctrine\ORM\QueryBuilder $query
+     * @param QueryBuilder $queryBuilder
      * @param array $options
      * @param string $action
-     * @return \Doctrine\ORM\QueryBuilder
+     * @return QueryBuilder
      */
-    public function alterBaseQueryBuilder($query, $options = array(), $action = 'list')
+    public function alterBaseQueryBuilder($queryBuilder, $options = array(), $action = 'list')
     {
-        if ($this->getManagedResourceHasOwnerProperty()) {
-            $owner = $this->getResourceOwnerManager()->findOwnerOfAuthenticatedUser();
-            $parameterName = $this->getManagedResourceOwnerPropertyName();
-            $query->andWhere(
-                $query->getRootAliases()[0] . '.' . $parameterName
-                . '=' .
-                $this->addNamedParameter($parameterName, $owner->getId(), $query, null)
+        if ($this->getHasContextProperty()) {
+
+            $queryBuilder = $this->getResourceContextManager()->addContextFilterToQueryBuilder(
+                $queryBuilder,
+                $this->getContextPropertyRelationName(),
+                $this->getContextPropertyValueNamePrefix()
             );
+
         }
-        return $query;
+        return $queryBuilder;
     }
 
-    protected function getManagedResourceHasOwnerProperty()
+    /**
+     * Get if managed entity has a context property
+     *
+     * @return bool
+     */
+    protected function getHasContextProperty()
     {
-        if (in_array(HasResourceOwner::class, class_implements($this->getResourceClass())))
+        if (in_array(HasResourceContext::class, class_implements($this->getResourceClass())))
             return true;
         return false;
     }
 
-    protected function getManagedResourceOwnerPropertyName()
+    /**
+     * Get field name of relation context property
+     *
+     * @return string|void
+     */
+    protected function getContextPropertyRelationName()
     {
-        return 'owner';
+        if ($this->getHasContextProperty())
+            return 'context';
+        return $this->throwException('Not implemented interface [' . HasResourceContext::class . ']');
     }
 
+    /**
+     * Get field prefix value of relation context property
+     *
+     * @return string|void
+     */
+    protected function getContextPropertyValueNamePrefix()
+    {
+        if ($this->getHasContextProperty())
+            return $this->getResourceName();
+        return $this->throwException('Not implemented interface [' . HasResourceContext::class . ']');
+    }
 
     // -------------------------------------------------------------------------
 
     /**
-     * Obtiene el elemento de ID indicado o lanza un error (404 Not Found Http Exception).
+     * Get an resource by id or throw 404 Not Found Http Exception.
      *
      * @param mixed $id
      *
-     * @return \TechPromux\BaseBundle\Entity\Resource\BaseResource
+     * @return BaseResource
      *
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @throws NotFoundHttpException
      */
     public function find($id)
     {
         if (!($object = $this->getDoctrineEntityRepository()->find($id))) {
-            throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException(sprintf('The resource \'%s\' was not found.', $id));
+            $this->throwException(sprintf('The resource \'%s\' was not found', $id), 'not-found');
         }
 
         return $object;
     }
 
     /**
-     * Obtiene el elemento con valores indicados o lanza un error (404 Not Found Http Exception).
+     * Get an resource by an array criteria or throw 404 Not Found Http Exception.
      *
      * @param array $criteria
-     * @return \TechPromux\BaseBundle\Entity\Resource\BaseResource
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @return BaseResource
+     * @throws NotFoundHttpException
      */
     public function findOneBy(array $criteria)
     {
-
         $query = $this->createQueryBuilder($criteria);
-
         if (!($object = $this->getOneOrNullResultFromQueryBuilder($query))) {
-            throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException(sprintf('The resource was not found.'));
+            $this->throwException('The resource was not found', 'not-found');
         }
-
         return $object;
     }
 
     /**
-     * Obtiene un único nodo existente dado un codigo
+     * Get an resource by name.
      *
      * @param string $name
-     * @return \TechPromux\BaseBundle\Entity\Resource\BaseResourceTree
+     * @return BaseResourceTree
      */
     public function findOneByName($name)
     {
-        //$qb = parent::createBaseQueryBuilder();
-        $qb = $this->createBaseQueryBuilder();
+        $qb = $this->createQueryBuilder();
         $qb->andWhere($qb->getRootAliases()[0] . '.name = ' . $this->addNamedParameter('name', $name, $qb));
-        $root = $qb->getQuery()->getOneOrNullResult();
-        return $root;
+        $result = $qb->getQuery()->getOneOrNullResult();
+        return $result;
     }
 
     /**
-     * Obtiene el elemento con valores indicados o null si no existe.
+     * OGet an resource by an array criteria
      *
      * @param array $criteria
-     * @return \TechPromux\BaseBundle\Entity\Resource\BaseResource
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @return BaseResource
+     * @throws NotFoundHttpException
      */
     public function findOneOrNullBy(array $criteria)
     {
@@ -238,10 +252,11 @@ abstract class BaseResourceManager extends BaseManager
     }
 
     /**
+     *  Find some elements by an array criteria
      *
      * @param array $criteria
      * @param array $orderBy
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
     {
@@ -250,7 +265,7 @@ abstract class BaseResourceManager extends BaseManager
     }
 
     /**
-     * Obtiene todos los elementos basados en la $query por defecto.
+     * Find all elements by default
      *
      * @return array
      */
@@ -269,69 +284,19 @@ abstract class BaseResourceManager extends BaseManager
         return $array;
     }
 
-    // -------------------------------------------------------------------------
-
-    /**
-     * Crea un Paginador personalizado basado en Pagerfanta.
-     *
-     * @param integer $page
-     * @param integer $limit
-     * @param array $criteria
-     * @param array $orderBy
-     * @return \Pagerfanta\Pagerfanta
-     */
-    protected function createPagerfantaPaginator($page = 1, $limit = 32, array $criteria = null, array $orderBy = null)
-    {
-        $pager = new \Pagerfanta\Pagerfanta(new \Pagerfanta\Adapter\DoctrineORMAdapter($this->createQueryBuilder($criteria, $orderBy)));
-        $pager->setCurrentPage($page);
-        $pager->setMaxPerPage($limit);
-        return $pager;
-    }
-
-    /**
-     * Obtiene la cantidad de elementos existentes de una Entidad.
-     *
-     * @param array $criteria
-     * @return integer
-     */
-    public function getCountElements(array $criteria = null)
-    {
-        $query = $this->createQueryBuilder($criteria);
-        $query_count = $query
-            ->select('COUNT(' . $query->getRootAliases()[0] . ')')->getQuery();
-        return $query_count->getSingleScalarResult();
-    }
-
-    /**
-     * Obtiene los elementos de una Entidad de forma paginada
-     *
-     * @param int $limit the limit of the result
-     * @param int $offset starting from the offset
-     * @param array $criteria
-     * @param array $orderBy
-     *
-     * @return array
-     */
-    public function getPaginatedElements($limit = 32, $offset = 0, array $criteria = null, array $orderBy = null)
-    {
-        return $this->createQueryBuilder($criteria, $orderBy)->setMaxResults($limit)
-            ->setFirstResult($offset)
-            ->getQuery()->execute();
-    }
-
     //--------------------------------------------------------------------------
 
     /**
-     * Verifica el acceso permitido a una instancia de una Entidad
+     * Verify access for an action and a resource
      *
      * @param string $action
      * @param mixed $resource
      * @return boolean
-     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     * @throws AccessDeniedException
      */
     public function checkAccess($action, $resource)
     {
-        if (strtolower($action) == 'list' || strtolower($action) == 'create' || strtolower($action) == 'post' || strtolower($action) == '' || is_null($resource)) {
+        if ((is_null($resource) || is_null($resource->getId())) && (empty($action) || in_array(strtolower($action), array('list', 'create', 'post')))) {
             return true;
         }
 
@@ -342,7 +307,7 @@ abstract class BaseResourceManager extends BaseManager
             if ($result) {
                 return true;
             } else {
-                $this->throwException('Access for this entity has been denied', 'security');
+                $this->throwException('Access for this resource has been denied', 'access-denied');
             }
         }
     }
@@ -350,9 +315,9 @@ abstract class BaseResourceManager extends BaseManager
     // -------------------------------------------------------------------------
 
     /**
-     * Obtiene una instancia nueva de la Entidad
+     * Create a new instance of managed class
      *
-     * @return \TechPromux\BaseBundle\Entity\Resource\BaseResource
+     * @return BaseResource
      */
     public function createNewInstance()
     {
@@ -361,11 +326,11 @@ abstract class BaseResourceManager extends BaseManager
     }
 
     /**
-     * Salva el elemento
+     * Persist an element
      *
-     * @param \TechPromux\BaseBundle\Entity\Resource\BaseResource $object
+     * @param BaseResource $object
      * @param boolean $flushed
-     * @return \TechPromux\BaseBundle\Entity\Resource\BaseResource
+     * @return BaseResource
      */
     public function persist($object, $flushed = true)
     {
@@ -380,11 +345,11 @@ abstract class BaseResourceManager extends BaseManager
     }
 
     /**
-     * Salva el elemento sin ejecutar le PrePersist ni el PostPersist
+     * Persist an element without prePersist and postPersist actions
      *
-     * @param \TechPromux\BaseBundle\Entity\Resource\BaseResource $object
+     * @param BaseResource $object
      * @param boolean $flushed
-     * @return \TechPromux\BaseBundle\Entity\Resource\BaseResource
+     * @return BaseResource
      */
     public function persistWithoutPreAndPostPersist($object, $flushed = true)
     {
@@ -397,16 +362,19 @@ abstract class BaseResourceManager extends BaseManager
     }
 
     /**
-     * Acciones antes de salvar el elemento
+     * Actions before persist an element
      *
-     * @param \TechPromux\BaseBundle\Entity\Resource\BaseResource $object
-     * @return \TechPromux\BaseBundle\Entity\Resource\BaseResource
+     * @param BaseResource $object
+     * @return BaseResource
      */
     public function prePersist($object)
     {
-        if ($this->getManagedResourceHasOwnerProperty()) {
-            $owner = $this->getResourceOwnerManager()->findOwnerOfAuthenticatedUser();
-            $object->setOwner($owner);
+        if ($this->getHasContextProperty()) {
+
+            $this->getResourceContextManager()->addContextRelationToObject(
+                $object,
+                $this->getContextPropertyValueNamePrefix()
+            );
         }
 
         $object->setCreatedAt(new \Datetime());
@@ -418,10 +386,10 @@ abstract class BaseResourceManager extends BaseManager
     }
 
     /**
-     * Acciones después de salvar el elemento
+     * Actions after persist an element
      *
-     * @param \TechPromux\BaseBundle\Entity\Resource\BaseResource $object
-     * @return \TechPromux\BaseBundle\Entity\Resource\BaseResource
+     * @param BaseResource $object
+     * @return BaseResource
      */
     public function postPersist($object)
     {
@@ -429,11 +397,11 @@ abstract class BaseResourceManager extends BaseManager
     }
 
     /**
-     * Actualiza el elemento
+     * Update an element
      *
-     * @param \TechPromux\BaseBundle\Entity\Resource\BaseResource $object
+     * @param BaseResource $object
      * @param boolean $flushed
-     * @return \TechPromux\BaseBundle\Entity\Resource\BaseResource
+     * @return BaseResource
      */
     public function update($object, $flushed = true)
     {
@@ -448,11 +416,11 @@ abstract class BaseResourceManager extends BaseManager
     }
 
     /**
-     * Actualiza el elemento sin ejecutar el PreUpdate o el PostUpdate
+     * Update an element without preUpdate and postUpdate actions
      *
-     * @param \TechPromux\BaseBundle\Entity\Resource\BaseResource $object
+     * @param BaseResource $object
      * @param boolean $flushed
-     * @return \TechPromux\BaseBundle\Entity\Resource\BaseResource
+     * @return BaseResource
      */
     public function updateWithoutPreAndPostUpdate($object, $flushed = true)
     {
@@ -465,10 +433,10 @@ abstract class BaseResourceManager extends BaseManager
     }
 
     /**
-     * Acciones antes de actualizar el elemento
+     * Actions before update an element
      *
-     * @param \TechPromux\BaseBundle\Entity\Resource\BaseResource $object
-     * @return \TechPromux\BaseBundle\Entity\Resource\BaseResource
+     * @param BaseResource $object
+     * @return BaseResource
      */
     public function preUpdate($object)
     {
@@ -477,10 +445,10 @@ abstract class BaseResourceManager extends BaseManager
     }
 
     /**
-     * Acciones después de salvar el elemento
+     * Actions after update an element
      *
-     * @param \TechPromux\BaseBundle\Entity\Resource\BaseResource $object
-     * @return \TechPromux\BaseBundle\Entity\Resource\BaseResource
+     * @param BaseResource $object
+     * @return BaseResource
      */
     public function postUpdate($object)
     {
@@ -488,11 +456,11 @@ abstract class BaseResourceManager extends BaseManager
     }
 
     /**
-     * Elimina el elemento
+     * Remove an element
      *
-     * @param \TechPromux\BaseBundle\Entity\Resource\BaseResource $object
+     * @param BaseResource $object
      * @param boolean $flushed
-     * @return \TechPromux\BaseBundle\Entity\Resource\BaseResource
+     * @return BaseResource
      */
     public function remove($object, $flushed = true)
     {
@@ -507,11 +475,11 @@ abstract class BaseResourceManager extends BaseManager
     }
 
     /**
-     * Elimina el elemento sin ejecutar el PreRemove o el PostRemove
+     * Remove an element without preRemove and postRemove actions
      *
-     * @param \TechPromux\BaseBundle\Entity\Resource\BaseResource $object
+     * @param BaseResource $object
      * @param boolean $flushed
-     * @return \TechPromux\BaseBundle\Entity\Resource\BaseResource
+     * @return BaseResource
      */
     public function removeWithoutPreAndPostRemove($object, $flushed = true)
     {
@@ -524,10 +492,10 @@ abstract class BaseResourceManager extends BaseManager
     }
 
     /**
-     * Acciones antes de eliminar el elemento
+     * Actions before remove an element
      *
-     * @param \TechPromux\BaseBundle\Entity\Resource\BaseResource $object
-     * @return \TechPromux\BaseBundle\Entity\Resource\BaseResource
+     * @param BaseResource $object
+     * @return BaseResource
      */
     public function preRemove($object)
     {
@@ -535,10 +503,10 @@ abstract class BaseResourceManager extends BaseManager
     }
 
     /**
-     * Acciones después de eliminar el elemento
+     * Actions after remove an element
      *
-     * @param \TechPromux\BaseBundle\Entity\Resource\BaseResource $object
-     * @return \TechPromux\BaseBundle\Entity\Resource\BaseResource
+     * @param BaseResource $object
+     * @return BaseResource
      */
     public function postRemove($object)
     {

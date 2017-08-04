@@ -1,6 +1,6 @@
 <?php
 
-namespace  TechPromux\BaseBundle\Entity\Resource;
+namespace TechPromux\BaseBundle\Entity\Resource;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -13,6 +13,13 @@ use Doctrine\ORM\Mapping as ORM;
  */
 abstract class BaseResourceTree extends BaseResource
 {
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="is_root", type="boolean", nullable=false)
+     */
+    protected $isRoot;
+
     /**
      * @var int
      *
@@ -42,28 +49,79 @@ abstract class BaseResourceTree extends BaseResource
     protected $rgt;
 
     /**
-     * @var BaseResourceTree
-     *
-     * TODO ORM\OneToMany(targetEntity="BaseResourceTree", mappedBy="parent", cascade={"all"}, orphanRemoval=true)
+     * // TODO ORM\ManyToOne(targetEntity="BaseResourceTree", inversedBy="children")
+     * // TODO ORM\JoinColumn(name="parent_id", referencedColumnName="id", nullable=true)
      */
-    protected $parent;
+    //private $parent;
+
 
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
-     * TODO ORM\ManyToOne(targetEntity="BaseResourceTree")
-     * TODO ORM\JoinColumn(name="parent_id", referencedColumnName="id", nullable=true)
+     * // TODO ORM\OrderBy({"position" = "ASC"})
+     * // TODO ORM\OneToMany(targetEntity="BaseResourceTree", mappedBy="parent", cascade={"all"}, orphanRemoval=true)
      */
-    protected $children;
+    //private $children;
 
     //-------------------------------------------------------------------------------
+
+    public function __toString()
+    {
+        return $this->getTitle() ? $this->getTitle() : '';
+    }
+
+    /**
+     * Get Level and Title
+     *
+     * @return string
+     */
+    public function getLevelAndName()
+    {
+        return (($this->getLevel() >= 0) ? str_repeat(' |--- ', $this->getLevel()) : '') . $this->getName();
+    }
+
+    /**
+     * Get Level and Title
+     *
+     * @return string
+     */
+    public function getLevelAndTitle()
+    {
+        return (($this->getLevel() >= 0) ? str_repeat(' |--- ', $this->getLevel()) : '') . $this->getTitle();
+    }
+
+    //------------------------------------------------------------------------------------
+
+    /**
+     * Set isRoot
+     *
+     * @param boolean $isRoot
+     *
+     * @return CatX
+     */
+    public function setIsRoot($isRoot)
+    {
+        $this->isRoot = $isRoot;
+
+        return $this;
+    }
+
+    /**
+     * Get isRoot
+     *
+     * @return boolean
+     */
+    public function getIsRoot()
+    {
+        return $this->isRoot;
+    }
 
     /**
      * Set level
      *
      * @param integer $level
      *
-     * @return BaseResourceTree
+     * @return CatX
      */
     public function setLevel($level)
     {
@@ -75,7 +133,7 @@ abstract class BaseResourceTree extends BaseResource
     /**
      * Get level
      *
-     * @return int
+     * @return integer
      */
     public function getLevel()
     {
@@ -87,7 +145,7 @@ abstract class BaseResourceTree extends BaseResource
      *
      * @param integer $position
      *
-     * @return BaseResourceTree
+     * @return CatX
      */
     public function setPosition($position)
     {
@@ -99,7 +157,7 @@ abstract class BaseResourceTree extends BaseResource
     /**
      * Get position
      *
-     * @return int
+     * @return integer
      */
     public function getPosition()
     {
@@ -111,7 +169,7 @@ abstract class BaseResourceTree extends BaseResource
      *
      * @param integer $lft
      *
-     * @return BaseResourceTree
+     * @return CatX
      */
     public function setLft($lft)
     {
@@ -123,7 +181,7 @@ abstract class BaseResourceTree extends BaseResource
     /**
      * Get lft
      *
-     * @return int
+     * @return integer
      */
     public function getLft()
     {
@@ -135,7 +193,7 @@ abstract class BaseResourceTree extends BaseResource
      *
      * @param integer $rgt
      *
-     * @return BaseResourceTree
+     * @return CatX
      */
     public function setRgt($rgt)
     {
@@ -147,91 +205,13 @@ abstract class BaseResourceTree extends BaseResource
     /**
      * Get rgt
      *
-     * @return int
+     * @return integer
      */
     public function getRgt()
     {
         return $this->rgt;
     }
 
-
-    //-----------------------------------------------------------------------
-
-    /**
-     * Set parent
-     *
-     * @param BaseResourceTree $parent
-     *
-     * @return BaseResourceTree
-     */
-    public function setParent(BaseResourceTree $parent = null)
-    {
-        $this->parent = $parent;
-        return $this;
-    }
-
-    /**
-     * Get parent
-     *
-     * @return BaseResourceTree
-     */
-    public function getParent()
-    {
-        return $this->parent;
-    }
-
-    /**
-     * Get children
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getChildren()
-    {
-        return $this->children;
-    }
-
-    /**
-     * Add child
-     *
-     * @param BaseResourceTree $child
-     *
-     * @return BaseResourceTree
-     */
-    public function addChild(BaseResourceTree $child)
-    {
-        $this->children[] = $child;
-        return $this;
-    }
-
-    /**
-     * Remove child
-     *
-     * @param BaseResourceTree $child
-     *
-     * @return BaseResourceTree
-     */
-    public function removeChild(BaseResourceTree $child)
-    {
-        $this->children->removeChild($child);
-        return $this;
-    }
-
-    //-----------------------------------------------------------------------
-
-    public function __toString()
-    {
-        return $this->getName() ? $this->getName() : '';
-    }
-
-    /**
-     * Get Level and Name
-     *
-     * @return string
-     */
-    public function getLevelAndName()
-    {
-        return (($this->getLevel() >= 0) ? str_repeat(' |--- ', $this->getLevel()) : '') . $this->getName();
-    }
 
 }
 

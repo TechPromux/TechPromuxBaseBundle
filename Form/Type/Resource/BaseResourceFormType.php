@@ -6,9 +6,9 @@
  * Time: 0:37
  */
 
-namespace  TechPromux\BaseBundle\Form\Resource;
+namespace TechPromux\BaseBundle\Form\Type\Resource;
 
-use  TechPromux\BaseBundle\Manager\Resource\BaseResourceManager;
+use TechPromux\BaseBundle\Manager\Resource\BaseResourceManager;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -20,16 +20,10 @@ abstract class BaseResourceFormType extends AbstractType
      */
     private $resource_manager;
 
-    function __construct()
+    function __construct(BaseResourceManager $resource_manager)
     {
-        global $kernel;
-        $this->resource_manager = $kernel->getContainer()->get($this->getResourceManagerID());
+        $this->resource_manager = $resource_manager;
     }
-
-    /**
-     * @return string
-     */
-    protected abstract function getResourceManagerID();
 
     /**
      * @return BaseResourceManager

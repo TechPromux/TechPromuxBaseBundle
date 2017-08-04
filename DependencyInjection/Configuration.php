@@ -1,6 +1,6 @@
 <?php
 
-namespace  TechPromux\BaseBundle\DependencyInjection;
+namespace TechPromux\BaseBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;

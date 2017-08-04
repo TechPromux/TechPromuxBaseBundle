@@ -1,25 +1,28 @@
 <?php
 
-namespace  TechPromux\BaseBundle\Manager;
+namespace TechPromux\BaseBundle\Manager;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\QueryBuilder;
+use JMS\Serializer\Serializer;
+use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 
 /**
- * Class BaseManager
- *
- * @package  TechPromux\BaseBundle\Manager
+ * BaseManager
  */
 abstract class BaseManager
 {
     /**
-     * Devuelve el Nombre del Bundle Base
+     * Get Base Bundle Name
      *
      * @return string
      */
@@ -29,6 +32,7 @@ abstract class BaseManager
     }
 
     /**
+     * Get Current Bundle Name
      *
      * @return string
      */
@@ -37,19 +41,20 @@ abstract class BaseManager
     //--------------------------------------------------------------------------
 
     /**
+     * Throw an Exception
      *
      * @param string $type
      * @param string $message
+     *
      * @throws \RuntimeException
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
-     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     * @throws NotFoundHttpException
+     * @throws AccessDeniedException
      * @throws \Exception
      */
     public function throwException($message = '', $type = 'default')
     {
-
         switch ($type) {
-            case 'security':
+            case 'access-denied':
                 throw new AccessDeniedException($message);
             case 'not-found':
                 throw new NotFoundHttpException($message);
@@ -77,6 +82,7 @@ abstract class BaseManager
 
     /**
      * @param EntityManagerInterface $entity_manager
+     *
      * @return BaseManager
      */
     public function setEntityManager($entity_manager)
@@ -92,13 +98,14 @@ abstract class BaseManager
      *
      * @param string $name
      * @param mixed $value
-     * @param \Doctrine\ORM\QueryBuilder $queryBuilder
+     * @param QueryBuilder $queryBuilder
      * @param mixed $type
+     *
      * @return string
      */
     protected function addNamedParameter($name, $value, $queryBuilder, $type = null)
     {
-        $bound_suffix = '_' . (microtime(true) * 10000) . '_' . rand(1000, 9999) . '_' . count($queryBuilder->getParameters());
+        $bound_suffix = '_' . (microtime(true) * 10000) . '_' . random_int(1000, 9999) . '_' . count($queryBuilder->getParameters());
         $placeHolder = ":" . $name . $bound_suffix;
         $queryBuilder->setParameter(substr($placeHolder, 1), $value, $type);
         return $placeHolder;
@@ -107,8 +114,9 @@ abstract class BaseManager
     /**
      * Get result from execution of queryBuilder
      *
-     * @param \Doctrine\ORM\QueryBuilder $queryBuilder
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @param QueryBuilder $queryBuilder
+     *
+     * @return ArrayCollection
      */
     protected function getResultFromQueryBuilder(\Doctrine\ORM\QueryBuilder $queryBuilder)
     {
@@ -123,12 +131,12 @@ abstract class BaseManager
     /**
      * Get one result from execution of queryBuilder
      *
-     * @param \Doctrine\ORM\QueryBuilder $queryBuilder
-     * @return ;
+     * @param QueryBuilder $queryBuilder
+     *
+     * @return mixed;
      */
-    protected function getOneOrNullResultFromQueryBuilder(\Doctrine\ORM\QueryBuilder $queryBuilder)
+    protected function getOneOrNullResultFromQueryBuilder(QueryBuilder $queryBuilder)
     {
-
         $query = $queryBuilder->getQuery();
 
         $result = $query->getOneOrNullResult();
@@ -136,7 +144,13 @@ abstract class BaseManager
         return $result;
     }
 
-
+    /**
+     * Execute a function in an transactional context
+     *
+     * @param $function
+     *
+     * @return mixed
+     */
     public function executeTransaction($function)
     {
         return $this->getEntityManager()->transactional($function);
@@ -145,12 +159,12 @@ abstract class BaseManager
     //--------------------------------------------------------------------------
 
     /**
-     * @var \JMS\Serializer\Serializer
+     * @var Serializer
      */
     private $jms_serializer;
 
     /**
-     * @return \JMS\Serializer\Serializer
+     * @return Serializer
      */
     public function getJmsSerializer()
     {
@@ -158,7 +172,8 @@ abstract class BaseManager
     }
 
     /**
-     * @param \JMS\Serializer\Serializer $jms_serializer
+     * @param Serializer $jms_serializer
+     *
      * @return BaseManager
      */
     public function setJmsSerializer($jms_serializer)
@@ -172,6 +187,7 @@ abstract class BaseManager
      *
      * @param mixed $data
      * @param string $format
+     *
      * @return string
      */
     public function serialize($data, $format = 'json')
@@ -198,6 +214,7 @@ abstract class BaseManager
 
     /**
      * @param FormFactory $form_factory
+     *
      * @return BaseManager
      */
     public function setFormFactory($form_factory)
@@ -212,7 +229,7 @@ abstract class BaseManager
      * @param mixed $data
      * @param array $options
      *
-     * @return \Symfony\Component\Form\Extension\Core\Type\FormType
+     * @return FormType
      */
     public function createFormBuilder($data = null, array $options = array())
     {
@@ -226,7 +243,7 @@ abstract class BaseManager
      * @param null $data
      * @param array $options
      *
-     * @return \Symfony\Component\Form\FormBuilderInterface
+     * @return FormBuilderInterface
      */
     public function createNamedFormBuilder($name = 'form', $data = null, array $options = array())
     {
@@ -250,6 +267,7 @@ abstract class BaseManager
 
     /**
      * @param EventDispatcher $event_dispatcher
+     *
      * @return BaseManager
      */
     public function setEventDispatcher($event_dispatcher)
@@ -263,8 +281,10 @@ abstract class BaseManager
      * Dispatch an event
      *
      * @param string $eventName
-     * @param \Symfony\Component\EventDispatcher\Event $event
-     * @return \Symfony\Component\EventDispatcher\Event
+     * @param Event $event
+     *
+     * @return Event
+     *
      * @throws \InvalidArgumentException
      * @throws \Exception
      */

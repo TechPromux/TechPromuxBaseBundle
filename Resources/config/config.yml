@@ -1,5 +1,5 @@
 doctrine:
     orm:
         resolve_target_entities:
-             TechPromux\BaseBundle\Entity\Owner\ResourceOwner:  TechPromux\BaseBundle\Entity\Owner\DefaultUser\DefaultUserResourceOwner
+             TechPromux\BaseBundle\Entity\Context\BaseResourceContext:  TechPromux\BaseBundle\Entity\Context\DefaultResourceContext
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace  TechPromux\BaseBundle\Entity;
+namespace TechPromux\BaseBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -21,7 +21,6 @@ abstract class BaseEntity
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
-
 
     /**
      * Get id

@@ -1,18 +1,20 @@
 <?php
 
-namespace  TechPromux\BaseBundle\Event;
+namespace TechPromux\BaseBundle\Event;
+
+use TechPromux\BaseBundle\Entity\Resource\BaseResource;
 
 abstract class BaseResourceEvent extends BaseEvent {
 
     protected $resource;
 
-    public function __construct(\TechPromux\BaseBundle\Entity\BaseResource $resource) {
+    public function __construct(BaseResource $resource) {
         $this->resource = $resource;
     }
 
     /**
      * 
-     * @return \TechPromux\BaseBundle\Entity\BaseResource
+     * @return BaseResource
      */
     public function getResource() {
         return $this->resource;

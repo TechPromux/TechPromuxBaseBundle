@@ -1,6 +1,6 @@
 <?php
 
-namespace  TechPromux\BaseBundle\Manager\Adapter\Paginator;
+namespace TechPromux\BaseBundle\Adapter\Paginator;
 
 use Doctrine\DBAL\Query\QueryBuilder;
 use Pagerfanta\Exception\InvalidArgumentException;
@@ -12,13 +12,13 @@ use Pagerfanta\Exception\InvalidArgumentException;
 class DoctrineDbalPaginatorAdapter implements \Pagerfanta\Adapter\AdapterInterface {
 
     private $queryBuilder;
+
     private $count;
 
     /**
-     * Constructor.
-     *
-     * @param QueryBuilder $queryBuilder              A DBAL query builder.
-     * @param int     $count Count.
+     * DoctrineDbalPaginatorAdapter constructor.
+     * @param QueryBuilder $queryBuilder
+     * @param null $rowCount
      */
     public function __construct(QueryBuilder $queryBuilder, $rowCount = null) {
         if ($queryBuilder->getType() !== QueryBuilder::SELECT) {

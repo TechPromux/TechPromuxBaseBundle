@@ -1,6 +1,6 @@
 <?php
 
-namespace  TechPromux\BaseBundle\Controller;
+namespace TechPromux\BaseBundle\Controller\Api\Resource;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,7 +20,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 /**
- * BaseResourceApiController
+ * BaseResourceCRUDController
  *
  * @author franklin
  */
@@ -237,7 +237,7 @@ abstract class BaseResourceCRUDController extends BaseResourceController {
         $page = $paramFetcher->get('page', 1);
         $limit = $paramFetcher->get('limit', 32);
         $pager = $this->getResourceManager()->createPagerfantaPaginator($page, $limit);
-        $resources = $pager->getNbResults();
+        //$resources = $pager->getNbResults();
         $pagerfantaFactory = new PagerfantaFactory();
         $paginatedCollection = $pagerfantaFactory->createRepresentation(
             $pager, new \Hateoas\Configuration\Route(

@@ -1,11 +1,11 @@
 <?php
 
-namespace  TechPromux\BaseBundle\Admin\Resource;
+namespace TechPromux\BaseBundle\Admin\Resource;
 
 use Sonata\CoreBundle\Validator\ErrorElement;
-use  TechPromux\BaseBundle\Admin\BaseAdmin;
-use  TechPromux\BaseBundle\Entity\Resource\BaseResource;
-use  TechPromux\BaseBundle\Manager\Resource\BaseResourceManager;
+use TechPromux\BaseBundle\Admin\BaseAdmin;
+use TechPromux\BaseBundle\Entity\Resource\BaseResource;
+use TechPromux\BaseBundle\Manager\Resource\BaseResourceManager;
 
 /**
  * Class BaseResourceAdmin
@@ -45,13 +45,40 @@ abstract class BaseResourceAdmin extends BaseAdmin
     public function checkAccess($action, $object = null)
     {
         parent::checkAccess($action, $object);
-        $this->getResourceManager()->checkAccess($action, $object);
+
+        $isChildAdmin = $this->isChild();
+
+        if (!$isChildAdmin)
+        {
+            $this->getResourceManager()->checkAccess($action, $object);
+        }
+        else
+        {
+            $parentAdmin = $this->getParent();
+
+            $parentId = $parentAdmin->getRequest()->get('id');
+
+            $parentObject = $parentAdmin->getObject($parentId);
+
+            $parentAdmin->getResourceManager()->checkAccess($action, $parentObject);
+
+            $this->getResourceManager()->checkAccess($action, $object);
+
+            //-----------------------------------
+
+            $childAdmin = $this;
+
+            $childId = $childAdmin->getRequest()->get('childId');
+
+            $childObject = $childAdmin->getObject($childId);
+
+            $childAdmin->getResourceManager()->checkAccess($action, $childObject);
+        }
     }
 
     /**
-     *
      * @param string $context
-     * @return \Doctrine\ORM\QueryBuilder
+     * @return \Doctrine\ORM\QueryBuilder|\Sonata\AdminBundle\Datagrid\ProxyQueryInterface
      */
     public function createQuery($context = 'list')
     {
@@ -98,7 +125,7 @@ abstract class BaseResourceAdmin extends BaseAdmin
      */
     public function toString($object)
     {
-        return $object->getName() ?: '';
+        return $object->getTitle() ?: '';
     }
 
     /**

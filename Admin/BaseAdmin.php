@@ -1,6 +1,6 @@
 <?php
 
-namespace  TechPromux\BaseBundle\Admin;
+namespace TechPromux\BaseBundle\Admin;
 
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
@@ -10,8 +10,7 @@ use Sonata\AdminBundle\Show\ShowMapper;
 use Sonata\CoreBundle\Validator\ErrorElement;
 
 /**
- * Class BaseAdmin
- * @package  TechPromux\BaseBundle\Admin
+ * BaseAdmin
  */
 abstract class BaseAdmin extends AbstractAdmin
 {
@@ -51,11 +50,19 @@ abstract class BaseAdmin extends AbstractAdmin
         $routes->remove('export');
     }
 
+    /**
+     * @param string $action
+     * @param null $object
+     */
     public function checkAccess($action, $object = null)
     {
         parent::checkAccess($action, $object);
     }
 
+    /**
+     * @param string $context
+     * @return \Sonata\AdminBundle\Datagrid\ProxyQueryInterface
+     */
     public function createQuery($context = 'list')
     {
         $query = parent::createQuery($context);
@@ -75,7 +82,6 @@ abstract class BaseAdmin extends AbstractAdmin
      */
     protected function configureListFields(ListMapper $listMapper)
     {
-
         unset($this->listModes['mosaic']);
 
         $listMapper->remove('batch');

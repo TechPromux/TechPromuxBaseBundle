@@ -1,21 +1,22 @@
 <?php
 
-namespace  TechPromux\BaseBundle\Admin\Resource;
+namespace TechPromux\BaseBundle\Admin\Resource;
 
 use Sonata\AdminBundle\Admin\Admin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Show\ShowMapper;
-
-namespace  TechPromux\BaseBundle\Admin\Resource;
+use Sonata\CoreBundle\Validator\ErrorElement;
+use TechPromux\BaseBundle\Entity\Resource\BaseResourceTree;
+use TechPromux\BaseBundle\Manager\Resource\BaseResourceTreeManager;
 
 /**
  * Class BaseResourceTreeAdmin
  * @package  TechPromux\BaseBundle\Admin\Resource
  */
-abstract class BaseResourceTreeAdmin extends BaseResourceAdmin {
-
+abstract class BaseResourceTreeAdmin extends BaseResourceAdmin
+{
 
     protected $listModes = [
         'list' => array(
@@ -27,27 +28,29 @@ abstract class BaseResourceTreeAdmin extends BaseResourceAdmin {
     ];
 
     /**
-     * 
-     * @return \TechPromux\BaseBundle\Manager\BaseResourceTreeManager
+     *
+     * @return BaseResourceTreeManager
      */
-    public function getResourceManager() {
+    public function getResourceManager()
+    {
         return parent::getResourceManager();
     }
 
     /**
-     * 
-     * @return \TechPromux\BaseBundle\Entity\BaseResourceTree
+     *
+     * @return BaseResourceTree
      */
-    public function getSubject() {
+    public function getSubject()
+    {
         return parent::getSubject();
     }
 
     /**
-     * 
      * @param string $context
      * @return \Doctrine\ORM\QueryBuilder
      */
-    public function createQuery($context = 'list') {
+    public function createQuery($context = 'list')
+    {
 
         $query = parent::createQuery($context);
 
@@ -68,10 +71,10 @@ abstract class BaseResourceTreeAdmin extends BaseResourceAdmin {
     }
 
     /**
-     * 
      * @param \Sonata\AdminBundle\Route\RouteCollection $routes
      */
-    public function configureRoutes(\Sonata\AdminBundle\Route\RouteCollection $routes) {
+    public function configureRoutes(\Sonata\AdminBundle\Route\RouteCollection $routes)
+    {
         parent::configureRoutes($routes);
 
         $routes->remove('show');
@@ -83,33 +86,33 @@ abstract class BaseResourceTreeAdmin extends BaseResourceAdmin {
     /**
      * @param DatagridMapper $datagridMapper
      */
-    protected function configureDatagridFilters(DatagridMapper $datagridMapper) {
+    protected function configureDatagridFilters(DatagridMapper $datagridMapper)
+    {
 
         parent::configureDatagridFilters($datagridMapper);
 
         $datagridMapper
-                ->add('codigo', null, array())
-                ->add('nombre', null, array())
-                ->add('parent.codigo', null, array())
-                ->add('parent.nombre', null, array())
-        ;
+            ->add('name', null, array())
+            ->add('title', null, array())
+            ->add('parent.name', null, array())
+            ->add('parent.title', null, array());
     }
 
     /**
      * @param ListMapper $listMapper
      */
-    protected function configureListFields(ListMapper $listMapper) {
-
+    protected function configureListFields(ListMapper $listMapper)
+    {
         parent::configureListFields($listMapper);
 
         $listMapper
-                ->addIdentifier('levelAndNombre', null, array())
-                ->add('codigo', null, array())
-                //->add('parent', null, array())
-                //->add('descripcion', null, array())
+            ->addIdentifier('levelAndName', null, array())
+            ->add('title', null, array())
+            //->add('parent', null, array())
+            ->add('description', null, array())
         ;
 
-        $listMapper->add('habilitado', null, array(
+        $listMapper->add('enabled', null, array(
             'editable' => true,
             'row_align' => 'center',
             'header_style' => 'width: 100px',
@@ -128,46 +131,48 @@ abstract class BaseResourceTreeAdmin extends BaseResourceAdmin {
     /**
      * @param FormMapper $formMapper
      */
-    protected function configureFormFields(FormMapper $formMapper) {
-
+    protected function configureFormFields(FormMapper $formMapper)
+    {
         parent::configureFormFields($formMapper);
 
-        $object = $this->getSubject(); /* @var \TechPromux\BaseBundle\Entity\BaseResourceTree $object */
+        $object = $this->getSubject();
+        /* @var $object BaseResourceTree */
 
         if ($object && $object->getParent() && is_null($object->getParent()->getParent())) {
             $object->setParent(null);
         }
 
         $formMapper
-                ->with('form.label_group_general', array('class' => 'col-md-6'))
-                ->add('codigo')
-                ->add('nombre')
-                ->add('descripcion', 'textarea', array(
-                    'required' => false,
-                    'attr'=>array('class'=>'html')
-                ))
-                ->end()
-        ;
+            ->with('form.label_group_general', array('class' => 'col-md-6'))
+            ->add('name')
+            ->add('title')
+            ->add('description', 'textarea', array(
+                'required' => false,
+                'attr' => array('class' => 'html')
+            ))
+            ->add('enabled')
+            ->end();
 
-        $roots = $this->getResourceManager()->findRootElements();
+        $roots = $this->getResourceManager()->findRootChildrenElements();
 
         if ((is_null($object) || is_null($object->getId())) ? count($roots) > 0 : (count($roots) > 1 || (!is_null($object->getParent()) && !is_null($object->getParent()->getParent())))) {
             $formMapper
-                    ->with('form.label_group_opciones', array('class' => 'col-md-6'));
+                ->with('form.label_group_options', array('class' => 'col-md-6'));
 
             if ($this->getCustomParentAssociationFieldType() == 'sonata_type_model_list') {
                 $formMapper->add('parent', 'sonata_type_model_list', array(
                     'required' => false,
                     'btn_add' => false,
-                        //'btn_delete' => false
-                        ), array('link_parameters' => array('exclude-parent-tree' => $this->getSubject()->getId())
-                        )
+                    //'btn_delete' => false
+                ), array('link_parameters' => array('exclude-parent-tree' => $this->getSubject()->getId())
+                    )
                 );
             } else {
-                $manager = $this->getResourceManager(); /* @var $manager \TechPromux\BaseBundle\Manager\BaseResourceTreeManager  */
+                $manager = $this->getResourceManager();
+                /* @var $manager \TechPromux\BaseBundle\Manager\Resource\BaseResourceTreeManager */
                 $formMapper
-                        ->add('parent', null, array('class' => $this->getResourceManager()->getResourceClassShortcut(),
-                            'query_builder' => function(\Doctrine\ORM\EntityRepository $er) use ($manager, $object) {
+                    ->add('parent', null, array('class' => $manager->getResourceClass(),
+                            'query_builder' => function (\Doctrine\ORM\EntityRepository $er) use ($manager, $object) {
                                 if (is_null($object) || is_null($object->getId())) {
                                     $qb = $manager->createQueryBuilder();
                                 } else {
@@ -175,83 +180,110 @@ abstract class BaseResourceTreeAdmin extends BaseResourceAdmin {
                                 }
                                 return $qb;
                             },
-                            'choice_label' => 'levelAndNombre',
+                            'choice_label' => 'levelAndTitle',
                             'required' => false,
                             "multiple" => false,
                             "expanded" => false,
-                                )
-                );
+                        )
+                    );
             }
 
             $formMapper->add('position', 'integer', array(
-                        'required' => false,
-                        'data' => $this->hasSubject() && $this->getSubject()->getPosition() ? $this->getSubject()->getPosition() : null
-                    ))
-                    ->end()
-            ;
+                'required' => false,
+                'data' => $this->hasSubject() && $this->getSubject()->getPosition() ? $this->getSubject()->getPosition() : null
+            ))
+                ->end();
         }
     }
 
-    protected function getCustomParentAssociationFieldType() {
+    /**
+     * @return string
+     */
+    protected function getCustomParentAssociationFieldType()
+    {
         return 'entity';
     }
 
-    /*
-    public function getTemplate($name) {
-        switch ($name) {
-            case 'edit':
-                return "SIPBaseBundle:Admin:ResourceTree/edit.html.twig";
-        }
-        return parent::getTemplate($name);
-    }
-    */
-
-    public function getNewInstance() {
-
-        $object = parent::getNewInstance(); /* @var $object \TechPromux\BaseBundle\Entity\BaseResourceTree */
+    /**
+     * @return mixed|BaseResourceTree
+     */
+    public function getNewInstance()
+    {
+        $object = parent::getNewInstance();
+        /* @var $object BaseResourceTree */
         $object->setPosition(null);
         return $object;
     }
 
     /**
-     * @param \Sonata\CoreBundle\Validator\ErrorElement $errorElement
-     * @param \TechPromux\BaseBundle\Entity\BaseResourceTree $object
+     * @param ErrorElement $errorElement
+     * @param BaseResourceTree $object
      */
     public function validate(\Sonata\CoreBundle\Validator\ErrorElement $errorElement, $object)
     {
         parent::validate($errorElement, $object);
 
-        $same_code = $this->getResourceManager()->findBy(array('codigo'=>$object->getCodigo()));
+        $objects_with_same_name = $this->getResourceManager()->findBy(array('name' => $object->getName()));
 
-        foreach($same_code as $sc)
-        {
-            if ($sc->getId()!=$object->getId()){
+        foreach ($objects_with_same_name as $obj) {
+            if ($obj->getId() != $object->getId()) {
                 $errorElement
-                    ->with('codigo')
-                    ->addViolation($this->trans('Ese valor debe ser único!',array(),'SIPBaseBundle'))
-                    ->end()
-                ;
+                    ->with('name')
+                    ->addViolation($this->trans('Name must be unique', array(), 'SIPBaseBundle'))
+                    ->end();
             }
         }
 
     }
 
     /**
-     * @param \TechPromux\BaseBundle\Entity\BaseResourceTree $object
+     * @param BaseResourceTree $object
      * @return string
      */
     public function toString($object)
     {
-        return $object && $object->getNombre() ? $object->getNombre() : '';
+        return $object && $object->getTitle() ? $object->getTitle() : '';
     }
 
+    /**
+     * @param string $name
+     * @return string
+     */
     public function getTemplate($name)
     {
-        switch ($name)
-        {
+        dump($name);
+
+        switch ($name) {
             case 'outer_list_rows_tree':
-                return 'SIPBaseBundle:Admin:ResourceTree/list_outer_rows_tree.html.twig';
+                return $this->getResourceManager()->getBaseBundleName() . ':Admin:ResourceTree/list_outer_rows_tree.html.twig';
+            case 'list':
+                $request = $this->getRequest();
+                $list_mode = $request->get('_list_mode', 'list');
+                if ($list_mode == 'tree') {
+                    return $this->getResourceManager()->getBaseBundleName() . ':Admin:ResourceTree/tree.html.twig';
+                }
         }
-        return parent::getTemplate($name); // TODO: Change the autogenerated stub
+        return parent::getTemplate($name);
+    }
+
+    public function postPersist($object)
+    {
+        parent::postPersist($object);
+
+        $this->getResourceManager()->updateLftRgtForAllElements();
+    }
+
+    public function postUpdate($object)
+    {
+        parent::postUpdate($object);
+
+        $this->getResourceManager()->updateLftRgtForAllElements();
+    }
+
+    public function postRemove($object)
+    {
+        parent::postRemove($object);
+
+        $this->getResourceManager()->updateLftRgtForAllElements();
     }
 }

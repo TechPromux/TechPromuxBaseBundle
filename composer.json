@@ -1,47 +1,55 @@
 {
-    "name": "techpromux/base-bundle",
-    "type": "symfony-bundle",
-    "description": "Base Codes for TechPromux bundles",
-    "keywords": ["base", "techpromux"],
-    "homepage": "https://github.com/TechPromux/TechPromuxBaseBundle",
-    "license": "GPL-3.0",
-    "authors": [
-        {
-            "name": "Franklin Rivero Duharte",
-            "email": "frivero.duharte@gmail.com",
-            "homepage": "https://github.com/frnklnrd"
-        },
-        {
-            "name": "TechPromux",
-            "email": "techpromux@gmail.com",
-            "homepage": "https://github.com/TechPromux"
-        }
-    ],
-    "require": {
-        "php": "^7.0",
-        "friendsofsymfony/user-bundle": "^2.0",
-        "sonata-project/admin-bundle": "^3.1",
-        "sonata-project/doctrine-orm-admin-bundle": "^3.0",
-        "symfony/form": "^2.8 || ^3.0",
-        "symfony/http-foundation": "^2.8 || ^3.0",
-        "symfony/security": "^2.8 || ^3.0"
+  "name": "techpromux/base-bundle",
+  "type": "symfony-bundle",
+  "description": "Base Codes for TechPromux bundles",
+  "keywords": [
+    "base",
+    "techpromux"
+  ],
+  "homepage": "https://github.com/TechPromux/TechPromuxBaseBundle",
+  "license": "GPL-3.0",
+  "authors": [
+    {
+      "name": "Franklin Rivero Duharte",
+      "email": "frivero.duharte@gmail.com",
+      "homepage": "https://github.com/frnklnrd"
     },
-    "autoload": {
-        "psr-4": { "TechPromux\\BaseBundle\\": "" },
-        "exclude-from-classmap": [
-            "Tests/"
-        ]
-    },
-    "autoload-dev": {
-        "psr-4": { "TechPromux\\BaseBundle\\Tests\\": "Tests/" }
-     },
-    "config": {
-        "sort-packages": true
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "1.0-dev"
-        }
+    {
+      "name": "TechPromux",
+      "email": "techpromux@gmail.com",
+      "homepage": "https://github.com/TechPromux"
     }
+  ],
+  "require": {
+    "php": "^7.0",
+    "friendsofsymfony/user-bundle": "^2.0",
+    "sonata-project/admin-bundle": "^3.1",
+    "sonata-project/doctrine-orm-admin-bundle": "^3.0",
+    "symfony/form": "^2.8 || ^3.0",
+    "symfony/http-foundation": "^2.8 || ^3.0",
+    "symfony/security": "^2.8 || ^3.0",
+    "white-october/pagerfanta-bundle": "^1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "TechPromux\\BaseBundle\\": ""
+    },
+    "exclude-from-classmap": [
+      "Tests/"
+    ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "TechPromux\\BaseBundle\\Tests\\": "Tests/"
+    }
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.0-dev"
+    }
+  }
 }
 

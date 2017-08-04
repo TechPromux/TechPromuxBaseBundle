@@ -6,13 +6,20 @@
  * Time: 10:25
  */
 
-namespace  TechPromux\BaseBundle\Manager\Security;
+namespace TechPromux\BaseBundle\Manager\Security;
 
 
 use FOS\UserBundle\Model\GroupManager;
 use FOS\UserBundle\Model\UserManager;
-use  TechPromux\BaseBundle\Manager\BaseManager;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
+use Symfony\Component\Security\Core\User\UserInterface;
+use TechPromux\BaseBundle\Manager\BaseManager;
 
+/**
+ * Class BaseSecurityManager
+ * @package TechPromux\BaseBundle\Manager\Security
+ */
 abstract class BaseSecurityManager extends BaseManager
 {
     /**
@@ -25,12 +32,12 @@ abstract class BaseSecurityManager extends BaseManager
     }
 
     /**
-     * @var \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage
+     * @var TokenStorage
      */
     private $security_token_storage;
 
     /**
-     * @return \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage
+     * @return TokenStorage
      */
     public function getSecurityTokenStorage()
     {
@@ -38,7 +45,7 @@ abstract class BaseSecurityManager extends BaseManager
     }
 
     /**
-     * @param \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage $security_token_storage
+     * @param TokenStorage $security_token_storage
      * @return BaseSecurityManager
      */
     public function setSecurityTokenStorage($security_token_storage)
@@ -50,12 +57,12 @@ abstract class BaseSecurityManager extends BaseManager
     //-------------------------------------------------------------------------------------
 
     /**
-     * @var \Symfony\Component\Security\Core\Authorization\AuthorizationChecker
+     * @var AuthorizationChecker
      */
     private $security_authorization_checker;
 
     /**
-     * @return \Symfony\Component\Security\Core\Authorization\AuthorizationChecker
+     * @return AuthorizationChecker
      */
     public function getSecurityAuthorizationChecker()
     {
@@ -63,7 +70,7 @@ abstract class BaseSecurityManager extends BaseManager
     }
 
     /**
-     * @param \Symfony\Component\Security\Core\Authorization\AuthorizationChecker $security_authorization_checker
+     * @param AuthorizationChecker $security_authorization_checker
      * @return BaseSecurityManager
      */
     public function setSecurityAuthorizationChecker($security_authorization_checker)
@@ -75,9 +82,9 @@ abstract class BaseSecurityManager extends BaseManager
     //------------------------------------------------------------------------------------
 
     /**
-     * Obtiene el usuario autenticado
+     * Get authenticated user
      *
-     * @return \Sonata\UserBundle\Entity\BaseUser
+     * @return UserInterface
      * @throws \Exception
      */
     public function findAuthenticatedUser()
@@ -89,36 +96,16 @@ abstract class BaseSecurityManager extends BaseManager
 
             $user = $token->getUser();
 
-            if (is_object($user) && $user instanceof \Symfony\Component\Security\Core\User\UserInterface) {
+            if (is_object($user) && $user instanceof UserInterface) {
                 return $user;
-            } else {
-                throw new \Exception();
             }
-        }
 
+        }
         return null;
     }
 
     /**
-     * Obtiene un usuario por su ID indicado
-     *
-     * @return \Sonata\UserBundle\Entity\BaseUser
-     * @throws \Exception
-     */
-    public function findUserById($userid)
-    {
-        if (is_null($userid)) {
-            throw new Exception('User ID must be not null');
-        }
-        $user = $this->getUserManager()->findUserBy(array('id' => $userid));
-        if (is_null($user)) {
-            throw new \Exception('User with id {' . $userid . '} was not found');
-        }
-        return $user;
-    }
-
-    /**
-     * Obtiene el nombre del ROLE para los usuarios super admin
+     * Get role name for Super Admin Users
      *
      * @return string
      */
@@ -128,7 +115,7 @@ abstract class BaseSecurityManager extends BaseManager
     }
 
     /**
-     * Permite conocer si el usuario autenticado es un super admin
+     * Get if authenticated user is superadmin
      *
      * @return boolean
      */
@@ -142,24 +129,7 @@ abstract class BaseSecurityManager extends BaseManager
     }
 
     /**
-     * Permite conocer si un usuario determinado por su ID es super admin
-     *
-     * @return boolean
-     */
-    protected function isSuperAdminByUserId($userid)
-    {
-
-        $user = $this->findUserById($userid);
-
-        if ($this->getSecurityAuthorizationChecker()->isGranted($this->getRoleNameForSuperAdminUser(), $user) || $user->isSuperAdmin()) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Permite conocer el locale del usuario autenticado
+     * Get locale from authenticated user
      *
      * @return string
      */
@@ -167,20 +137,6 @@ abstract class BaseSecurityManager extends BaseManager
     {
 
         $user = $this->findAuthenticatedUser();
-
-        return (null !== $user && $user->getLocale()) ? $user->getLocale() : 'es';
-    }
-
-    /**
-     * Permite conocer el locale de un usuario determinado pro su ID
-     *
-     * @return string
-     * @throws \Exception
-     */
-    public function getLocaleFromUserByUserId($userid)
-    {
-
-        $user = $this->findUserById($userid);
 
         return (null !== $user && $user->getLocale()) ? $user->getLocale() : 'es';
     }
@@ -202,6 +158,7 @@ abstract class BaseSecurityManager extends BaseManager
 
     /**
      * @param string $secret_app_string
+     *
      * @return BaseSecurityManager
      */
     public function setSecretAppString($secret_app_string)
@@ -212,9 +169,10 @@ abstract class BaseSecurityManager extends BaseManager
 
 
     /**
-     * Codifica una cadena obteniendo otra reversible
+     * Encode an string with a reversible algorithm
      *
      * @param string $string
+     *
      * @return string
      */
     public function encodeReversibleString($string)
@@ -240,9 +198,10 @@ abstract class BaseSecurityManager extends BaseManager
     }
 
     /**
-     * Decodifica una cadena desde otra reversible
+     * Decode an string with a reversible algorithm
      *
      * @param string $string
+     *
      * @return string
      */
     public function decodeReversibleString($string)
@@ -264,9 +223,10 @@ abstract class BaseSecurityManager extends BaseManager
     }
 
     /**
-     * Obtiene un hash irreversible de una cadena
+     * Encode an string with in a irreversible hash
      *
      * @param type $string
+     *
      * @return type
      */
     public function encodeHashOfString($string)
@@ -285,7 +245,6 @@ abstract class BaseSecurityManager extends BaseManager
 
         return $hash;
     }
-
 
 
 }

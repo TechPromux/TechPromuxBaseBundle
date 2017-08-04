@@ -1,22 +1,22 @@
 <?php
 
-namespace  TechPromux\BaseBundle\Event;
+namespace TechPromux\BaseBundle\Event;
 
 abstract class BaseEvent extends \Symfony\Component\EventDispatcher\Event {
 
     /**
-     * Ejecución antes que otros
+     * Priority for execution before than others
      */
-    const PRIORIDAD_ALTA = 16;
+    const PRIORITY_HIGH = 16;
 
     /**
-     * Ejecución normal
+     * Priority for normal execution
      */
-    const PRIORIDAD_NORMAL = 15;
+    const PRIORITY_NORMAL = 15;
 
     /**
-     * Ejecución después que otros
+     * Priority for execution after than others
      */
-    const PRIORIDAD_BAJA = 14;
+    const PRIORITY_LOW = 14;
 
 }
