@@ -67,7 +67,7 @@ abstract class BaseResourceTree extends BaseResource
 
     public function __toString()
     {
-        return $this->getTitle() ? $this->getTitle() : '';
+        return !empty($this->getTitle()) ? $this->getTitle() : ($this->getName() ? $this->getName() : '');
     }
 
     /**

@@ -14,6 +14,7 @@ class ManagerCompilerPass implements CompilerPassInterface
         $jmsSerializerDefinitionId = 'jms_serializer';
         $formFactoryDefinitionId = 'form.factory';
         $eventDispatcherDefinitionId = 'event_dispatcher';
+        $translatorDefinitionId = 'translator';
 
         $taggedServicesIds = $container->findTaggedServiceIds(
             'techpromux.manager'
@@ -38,6 +39,10 @@ class ManagerCompilerPass implements CompilerPassInterface
             $serviceDefinition->addMethodCall(
                 'setEventDispatcher',
                 array(new \Symfony\Component\DependencyInjection\Reference($eventDispatcherDefinitionId))
+            );
+            $serviceDefinition->addMethodCall(
+                'setTranslator',
+                array(new \Symfony\Component\DependencyInjection\Reference($translatorDefinitionId))
             );
 
         }

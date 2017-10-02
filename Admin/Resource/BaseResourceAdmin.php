@@ -48,12 +48,9 @@ abstract class BaseResourceAdmin extends BaseAdmin
 
         $isChildAdmin = $this->isChild();
 
-        if (!$isChildAdmin)
-        {
+        if (!$isChildAdmin) {
             $this->getResourceManager()->checkAccess($action, $object);
-        }
-        else
-        {
+        } else {
             $parentAdmin = $this->getParent();
 
             $parentId = $parentAdmin->getRequest()->get('id');
@@ -125,7 +122,7 @@ abstract class BaseResourceAdmin extends BaseAdmin
      */
     public function toString($object)
     {
-        return $object->getTitle() ?: '';
+        return $object && $object->getTitle() ? $object->getTitle() : ($object->getName() ? $object->getName() : '');
     }
 
     /**

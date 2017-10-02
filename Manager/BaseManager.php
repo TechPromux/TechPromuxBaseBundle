@@ -14,6 +14,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Translation\DataCollectorTranslator;
 
 
 /**
@@ -299,5 +300,30 @@ abstract class BaseManager
 
     //-------------------------------------------------------------------------------
 
+    /**
+     * @var DataCollectorTranslator
+     */
+    protected $translator;
+
+    /**
+     * @return DataCollectorTranslator
+     */
+    public function getTranslator()
+    {
+        return $this->translator;
+    }
+
+    /**
+     * @param DataCollectorTranslator $translator
+     * @return BaseManager
+     */
+    public function setTranslator($translator)
+    {
+        $this->translator = $translator;
+        return $this;
+    }
+
+
+    //-------------------------------------------------------------------------------------------
 
 }

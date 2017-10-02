@@ -106,7 +106,7 @@ abstract class BaseResourceTreeAdmin extends BaseResourceAdmin
         parent::configureListFields($listMapper);
 
         $listMapper
-            ->addIdentifier('levelAndName', null, array())
+            ->add('levelAndName', null, array())
             ->add('title', null, array())
             //->add('parent', null, array())
             ->add('description', null, array())
@@ -242,7 +242,7 @@ abstract class BaseResourceTreeAdmin extends BaseResourceAdmin
      */
     public function toString($object)
     {
-        return $object && $object->getTitle() ? $object->getTitle() : '';
+        return $object && $object->getTitle() ? $object->getTitle() : ($object->getName() ? $object->getName() : '');
     }
 
     /**

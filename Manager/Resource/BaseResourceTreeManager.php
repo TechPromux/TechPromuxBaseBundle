@@ -136,9 +136,9 @@ abstract class BaseResourceTreeManager extends BaseResourceManager
 
         $root->setIsRoot(true);
 
-        $root->setName('_ROOT_' . $this->getBundleName() . '_' . $this->getResourceName());
-        $root->setTitle('');
-        $root->setDescription('');
+        $root->setName('_ROOT_' . strtoupper($this->getResourceName()));
+        $root->setTitle('_ROOT_' . strtoupper($this->getResourceName()));
+        $root->setDescription('ROOT node for ' . $this->getResourceName());
         $root->setLevel(-1);
         $root->setPosition(0);
         $root->setLft(0);

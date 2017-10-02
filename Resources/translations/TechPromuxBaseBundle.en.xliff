@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="TechPromuxBaseBundle.en.xliff">
+        <body>
+            <trans-unit id="link_action_execute">
+                <source>link_action_execute</source>
+                <target><![CDATA[Execute]]></target>
+            </trans-unit>
+            <trans-unit id="link_action_copy_confirm">
+                <source>link_action_copy_confirm</source>
+                <target><![CDATA[Confirm Copy]]></target>
+            </trans-unit>
+            <trans-unit id="link_action_copy">
+                <source>link_action_copy</source>
+                <target><![CDATA[Copy]]></target>
+            </trans-unit>
+
+            <!--
+                <trans-unit id="">
+                    <source></source>
+                    <target><![CDATA[]]></target>
+                </trans-unit>
+            -->
+        </body>
+    </file>
+</xliff>

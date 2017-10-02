@@ -5,11 +5,9 @@ services:
 
     # Alias Services
 
-    techpromux.manager.default_security:
-        alias: techpromux_base.manager.default_security
-
-    techpromux.manager.default_resource_context:
+    techpromux_base.manager.resource_context:
         alias: techpromux_base.manager.default_resource_context
+        #alias: techpromux_base.manager.default_resource_context_by_user
 
     # Manager Services
 
@@ -41,4 +39,4 @@ services:
             - { name: techpromux.resource_manager}
         calls:
             #- [ setServiceContainer,['@service_container']]
-            - [ setSecurityManager,['@techpromux.manager.default_security']]
+            - [ setSecurityManager,['@techpromux_base.manager.default_security']]
