@@ -122,7 +122,11 @@ abstract class BaseResourceAdmin extends BaseAdmin
      */
     public function toString($object)
     {
-        return $object && $object->getTitle() ? $object->getTitle() : ($object->getName() ? $object->getName() : '');
+        if (!$object)
+            return '';
+        if (!empty($object->getTitle()))
+            return $object->getTitle();
+        return $object->getName() ? $object->getName() : '';
     }
 
     /**

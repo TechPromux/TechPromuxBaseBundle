@@ -14,6 +14,10 @@
                 <source>link_action_copy</source>
                 <target><![CDATA[Copy]]></target>
             </trans-unit>
+            <trans-unit id="link_action_reload">
+                <source>link_action_reload</source>
+                <target><![CDATA[Reload]]></target>
+            </trans-unit>
 
             <!--
                 <trans-unit id="">
